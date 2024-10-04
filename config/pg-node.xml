@@ -1,0 +1,165 @@
+<?xml version="1.0"?>
+
+<System>
+
+<Plugins>
+    <plugin name="PG" lib="libpwr_pgdev"/>
+</Plugins>
+
+<Devices>
+    <device name="PG-node1" plugin="PG" initString=""/>
+</Devices>
+
+<Objects>
+
+<obj name="plat" type="Platform">
+
+    <attributes>
+        <attr name="ENERGY" op="SUM">
+            <src type="child" name="node" />
+        </attr>
+        <attr name="POWER" op="AVG">
+            <src type="child" name="node" />
+        </attr>
+        <attr name="TEMP" op="AVG">
+            <src type="child" name="node" />
+        </attr>
+        <attr name="FREQ" op="AVG">
+            <src type="child" name="node" />
+        </attr>
+    </attributes>
+
+    <children>
+        <child name="node" />
+    </children>
+
+</obj>
+
+<obj name="plat.node" type="Node" >
+
+    <attributes>
+        <attr name="ENERGY" op="SUM" >
+            <src type="child" name="socket" />
+        </attr>
+        <attr name="POWER" op="AVG" >
+            <src type="child" name="socket" />
+        </attr>
+        <attr name="TEMP" op="AVG" >
+            <src type="child" name="socket" />
+        </attr>
+        <attr name="FREQ" op="AVG" >
+            <src type="child" name="socket" />
+        </attr>
+    </attributes>
+
+    <children>
+        <child name="socket" />
+    </children>
+
+</obj>
+
+<obj name="plat.node.socket" type="Socket" >
+
+    <devices>
+        <dev name="pgdev1" device="PG-node1" openString="0:0" /> 
+    </devices>
+
+    <children>
+        <child name="core0" />
+        <child name="core1" />
+        <child name="core2" />
+        <child name="core3" />
+        <child name="gpu" />
+    </children>
+
+    <attributes>
+        <attr name="ENERGY" op="SUM">
+            <src type="device" name="pgdev1" />
+        </attr>
+        <attr name="POWER" op="AVG">
+            <src type="device" name="pgdev1" />
+        </attr>
+        <attr name="TEMP" op="AVG">
+            <src type="device" name="pgdev1" />
+        </attr>
+        <attr name="FREQ" op="AVG" >
+            <src type="child" name="core0" />
+        </attr>
+        <attr name="FREQ" op="AVG" >
+            <src type="child" name="core1" />
+        </attr>
+        <attr name="FREQ" op="AVG" >
+            <src type="child" name="core2" />
+        </attr>
+        <attr name="FREQ" op="AVG" >
+            <src type="child" name="core3" />
+        </attr>
+        <attr name="FREQ" op="AVG" >
+            <src type="child" name="gpu" />
+        </attr>
+    </attributes>
+
+</obj>
+
+<obj name="plat.node.socket.core0" type="Core" >
+    <devices>
+        <dev name="pgdev1" device="PG-node1" openString="0:0" /> 
+    </devices>
+
+    <attributes>
+        <attr name="FREQ" op="AVG">
+            <src type="device" name="pgdev1" />
+        </attr>
+    </attributes>
+</obj>
+
+<obj name="plat.node.socket.core1" type="Core" >
+    <devices>
+        <dev name="pgdev1" device="PG-node1" openString="0:0" /> 
+    </devices>
+
+    <attributes>
+        <attr name="FREQ" op="AVG">
+            <src type="device" name="pgdev1" />
+        </attr>
+    </attributes>
+</obj>
+
+<obj name="plat.node.socket.core2" type="Core" >
+    <devices>
+        <dev name="pgdev1" device="PG-node1" openString="0:0" /> 
+    </devices>
+
+    <attributes>
+        <attr name="FREQ" op="AVG">
+            <src type="device" name="pgdev1" />
+        </attr>
+    </attributes>
+</obj>
+
+<obj name="plat.node.socket.core3" type="Core" >
+    <devices>
+        <dev name="pgdev1" device="PG-node1" openString="0:0" /> 
+    </devices>
+
+    <attributes>
+        <attr name="FREQ" op="AVG">
+            <src type="device" name="pgdev1" />
+        </attr>
+    </attributes>
+</obj>
+
+<obj name="plat.node.socket.gpu" type="Core" >
+    <devices>
+        <dev name="pgdev" device="PG-node1" openString="0:1" /> 
+    </devices>
+
+    <attributes>
+        <attr name="FREQ" op="AVG">
+            <src type="device" name="pgdev" />
+        </attr>
+    </attributes>
+</obj>
+
+</Objects>
+</System>

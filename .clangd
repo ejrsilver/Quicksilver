@@ -1,0 +1,4 @@
+CompileFlags:
+  Add: [-xc++, -Wall, --include-directory=/Users/ethansilver/Code/ELEC498/pwrapi-ref/build/install/include/ ]
+  Remove: [-W*]
+  Compiler: clang++

@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+
+<System>
+
+<Plugins>
+    <plugin name="WU" lib="libpwr_wudev"/>
+</Plugins>
+
+<Devices>
+    <device name="WU-node" plugin="WU" initString="/dev/ttyUSB0:115200" />
+</Devices>
+
+<Objects>
+
+<obj name="plat" type="Platform">
+
+    <attributes>
+        <attr name="ENERGY" op="SUM">
+            <src type="child" name="node" />
+        </attr>
+        <attr name="POWER" op="AVG">
+            <src type="child" name="node" />
+        </attr>
+        <attr name="VOLTAGE" op="AVG">
+            <src type="child" name="node" />
+        </attr>
+        <attr name="VOLTAGE" op="AVG">
+            <src type="child" name="node" />
+        </attr>
+    </attributes>
+
+    <children>
+        <child name="node" />
+    </children>
+
+</obj>
+
+<obj name="plat.node" type="Node" >
+
+    <devices>
+        <dev name="wudev" device="WU-node" openString="" />
+    </devices>
+
+    <attributes>
+        <attr name="ENERGY" op="AVG" >
+            <src type="device" name="wudev" />
+        </attr>
+        <attr name="POWER" op="AVG" >
+            <src type="device" name="wudev" />
+        </attr>
+        <attr name="VOLTAGE" op="AVG" >
+            <src type="device" name="wudev" />
+        </attr>
+        <attr name="CURRENT" op="AVG" >
+            <src type="device" name="wudev" />
+        </attr>
+    </attributes>
+
+</obj>
+
+</Objects>
+</System>

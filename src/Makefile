@@ -108,11 +108,11 @@ SHELL = /bin/bash
 #LDFLAGS = -L$(ROCM_ROOT)/lib -lamdhip64
 
 #AMD with HIP
-ROCM_ROOT = /opt/rocm-5.6.0
-CXX = /usr/tce/packages/cray-mpich/cray-mpich-8.1.26-rocmcc-5.6.0-cce-16.0.0a-magic/bin/mpicxx
-CXXFLAGS = -g 
-CPPFLAGS = -DHAVE_MPI -DHAVE_HIP -x hip --offload-arch=gfx90a -fgpu-rdc -Wno-unused-result
-LDFLAGS = -fgpu-rdc --hip-link --offload-arch=gfx90a
+# ROCM_ROOT = /opt/rocm-5.6.0
+# CXX = /usr/tce/packages/cray-mpich/cray-mpich-8.1.26-rocmcc-5.6.0-cce-16.0.0a-magic/bin/mpicxx
+# CXXFLAGS = -g 
+# CPPFLAGS = -DHAVE_MPI -DHAVE_HIP -x hip --offload-arch=gfx90a -fgpu-rdc -Wno-unused-result
+# LDFLAGS = -fgpu-rdc --hip-link --offload-arch=gfx90a
 
 
 
@@ -143,15 +143,15 @@ LDFLAGS = -fgpu-rdc --hip-link --offload-arch=gfx90a
 ###############################################################################
 ### GCC -- with MPI and OpenMP 
 ###############################################################################
-#OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp
-#OPENMP_LDFLAGS = -fopenmp
-#MPI_FLAGS = -DHAVE_MPI
-#OPTFLAGS = -g -O2
-#
-#CXX=mpicxx
-#CXXFLAGS = -std=c++11 $(OPTFLAGS) -Wpedantic
-#CPPFLAGS = $(MPI_FLAGS) $(OPENMP_FLAGS)
-#LDFLAGS = $(OPENMP_LDFLAGS) 
+OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp
+OPENMP_LDFLAGS = -fopenmp
+MPI_FLAGS = -DHAVE_MPI
+OPTFLAGS = -g -O2
+
+CXX=mpicxx
+CXXFLAGS = -std=c++11 $(OPTFLAGS) -Wpedantic
+CPPFLAGS = $(MPI_FLAGS) $(OPENMP_FLAGS)
+LDFLAGS = $(OPENMP_LDFLAGS) 
 
 
 ###############################################################################
