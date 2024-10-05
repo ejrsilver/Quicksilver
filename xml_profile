@@ -18,6 +18,6 @@ export DYLD_LIBRARY_PATH="${prefix}/lib:${DYLD_LIBRARY_PATH}"
 
 export POWERAPI_DEBUG=0
 export POWERAPI_ROOT="plat.cab0.node0"
-export POWERAPI_CONFIG="$./config/dummySystemLocal.xml"
+export POWERAPI_CONFIG="./config/dummySystemLocal.xml"
 
 export PATH="$PATH:${prefix}/lib"

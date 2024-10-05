@@ -51,6 +51,8 @@ int main(int argc, char **argv) {
   rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
   assert(PWR_RET_SUCCESS == rc);
 
+  printf("HERE");
+
   rc = PWR_CntxtGetEntryPoint(cntxt, &self);
   assert(PWR_RET_SUCCESS == rc);
 
