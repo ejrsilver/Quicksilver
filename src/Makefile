@@ -1,4 +1,7 @@
 # Makefile for Quicksilver
+#
+# Modification for Power API (This should be the install directory for Power API on your system).
+POWER_LOC=/Users/ethansilver/Code/ELEC498/pwrapi-ref/build/install
 
 # Quicksilver is a relatively easy to build code with no external
 # dependencies (except MPI and OpenMP).  You should be able to build
@@ -130,28 +133,28 @@ SHELL = /bin/bash
 # This works on a Macbook (if gcc is installed)
 ###############################################################################
 #
-#OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp 
-#OPENMP_LDFLAGS = -fopenmp
-#OPTFLAGS = -g -O2
-#
-#CXX=g++
-#CXXFLAGS = -std=c++11  $(OPTFLAGS) -Wpedantic
-#CPPFLAGS = $(OPENMP_FLAGS)
-#LDFLAGS = $(OPENMP_LDFLAGS) 
+OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp 
+OPENMP_LDFLAGS = -fopenmp
+OPTFLAGS = -g -O2
+
+CXX=g++-14
+CXXFLAGS = -std=c++11  $(OPTFLAGS) -Wpedantic -I$(POWER_LOC)/include
+CPPFLAGS = $(OPENMP_FLAGS)
+LDFLAGS = $(OPENMP_LDFLAGS) -L$(POWER_LOC)/lib -lpwr
 
 
 ###############################################################################
 ### GCC -- with MPI and OpenMP 
 ###############################################################################
-OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp
-OPENMP_LDFLAGS = -fopenmp
-MPI_FLAGS = -DHAVE_MPI
-OPTFLAGS = -g -O2
-
-CXX=mpicxx
-CXXFLAGS = -std=c++11 $(OPTFLAGS) -Wpedantic
-CPPFLAGS = $(MPI_FLAGS) $(OPENMP_FLAGS)
-LDFLAGS = $(OPENMP_LDFLAGS) 
+# OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp
+# OPENMP_LDFLAGS = -fopenmp
+# MPI_FLAGS = -DHAVE_MPI
+# OPTFLAGS = -g -O2
+#
+# CXX=g++-14
+# CXXFLAGS = -std=c++11 $(OPTFLAGS) -Wpedantic
+# CPPFLAGS = $(MPI_FLAGS) $(OPENMP_FLAGS)
+# LDFLAGS = $(OPENMP_LDFLAGS) 
 
 
 ###############################################################################
