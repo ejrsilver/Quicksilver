@@ -1,0 +1,122 @@
+<System>
+    <Plugins>
+        <plugin name="PowerMetrics" lib="libpwr_powermetrics"/>
+    </Plugins>
+    <Devices>
+        <device name="PowerMetrics-core" plugin="PowerMetrics" initString=""/>
+    </Devices>
+    <Locations>
+        <location name="daemon-cab0" type="rpc" config="localhost:32000" />
+    </Locations>
+    <Objects>
+        <obj name="plat" type="Platform">
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="child" name="node" />
+                </attr>
+            </attributes>
+            <children>
+                <child name="node0"/>
+            </children>
+        </obj>
+        <obj name="plat.node0" type="Node">
+            <devices>
+                <dev name="dev1" device="PowerMetrics-core" openString="node0" /> 
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM" >
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM" >
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+            <children>
+                <child name="core0"/>
+                <child name="core1"/>
+                <child name="core2"/>
+                <child name="core3"/>
+                <child name="core4"/>
+                <child name="core5"/>
+            </children>
+        </obj>
+        <obj name="plat.node0.core0" type="Core">
+            <devices>
+                <dev name="dev1" device="PowerMetrics-core" openString="core0" /> 
+            </devices>
+            <attributes>
+                <attr name="CSTATE" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core1" type="Core">
+            <devices>
+                <dev name="dev1" device="PowerMetrics-core" openString="core1" /> 
+            </devices>
+            <attributes>
+                <attr name="CSTATE" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core2" type="Core">
+            <devices>
+                <dev name="dev1" device="PowerMetrics-core" openString="core2" /> 
+            </devices>
+            <attributes>
+                <attr name="CSTATE" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core3" type="Core">
+            <devices>
+                <dev name="dev1" device="PowerMetrics-core" openString="core3" /> 
+            </devices>
+            <attributes>
+                <attr name="CSTATE" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core4" type="Core">
+            <devices>
+                <dev name="dev1" device="PowerMetrics-core" openString="core4" /> 
+            </devices>
+            <attributes>
+                <attr name="CSTATE" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core5" type="Core">
+            <devices>
+                <dev name="dev1" device="PowerMetrics-core" openString="core5" /> 
+            </devices>
+            <attributes>
+                <attr name="CSTATE" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+    </Objects>
+</System>
