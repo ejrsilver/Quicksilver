@@ -15,4 +15,4 @@ Replace the empty `<Plugins/>` tag with the following:
 
 Then `cd` into [src](./src/) and build with `make`.
 
-Next, to run with RAPL, use the following command: `sudo --preserve-env ./src/qs`.
+Next, to run with RAPL, use the following command: `sudo --preserve-env ./src/qs`. If that doesn't work, `su` to root then source the profile and try again.
