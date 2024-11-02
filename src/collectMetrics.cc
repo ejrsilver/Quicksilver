@@ -4,6 +4,7 @@
 #include <fstream>
 #include <pwr.h>
 #include <cassert>
+#include <sys/stat.h>
 
 using namespace std;
 
@@ -18,7 +19,24 @@ public:
     {
         time_t now = time(0);
         instanceTimestamp = now;
-        fileName = "data/" + s + to_string(instanceTimestamp) + ".txt";
+
+        struct stat info;
+        std::string dirPath = "./data/";
+        if (stat(dirPath.c_str(), &info) != 0) 
+        {
+            if (mkdir(dirPath.c_str(), 0755) != 0) 
+            {
+                printf("Error: failed to create data/ directory for logging\n");
+                exit(-1);
+            } 
+        }
+        else if (!info.st_mode & S_IFDIR)
+        {
+            printf("Error: failed to create data/ directory for logging. It already exists but is not a folder.\n");
+            exit(-1);
+        }
+
+        fileName = dirPath + s + to_string(instanceTimestamp) + ".txt";
 
         ofstream fp;
         fp.open(fileName);
