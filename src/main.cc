@@ -21,9 +21,11 @@
 #include "qs_assert.hh"
 #include "utils.hh"
 #include "utilsMpi.hh"
+#include <atomic>
 #include <cassert>
 #include <cstdio>
 #include <iostream>
+#include <thread>
 
 #include "collectMetrics.cc"
 
@@ -39,8 +41,19 @@ using namespace std;
 
 MonteCarlo *mcco = NULL;
 
-int main(int argc, char **argv)
-{
+// variable set by main program to signal that program is still running
+atomic<bool> running(true);
+
+void metricsThread(const string f_name, PWR_Obj self) {
+  Metrics pwrMetrics(f_name);
+  // collect data every 1 second while main program is still running
+  while (running) {
+    pwrMetrics.getMetrics(self);
+    this_thread::sleep_for(chrono::seconds(1));
+  }
+}
+
+int main(int argc, char **argv) {
   printf("HERE\n");
 
   PWR_Grp grp;
@@ -52,8 +65,6 @@ int main(int argc, char **argv)
   PWR_Time ts, tstart, tstop, tstart2, tstop2;
   PWR_Status status;
 
-  Metrics pwrMetrics("main_test");
-
   printf("HERE2\n");
 
   // Get a context
@@ -64,6 +75,8 @@ int main(int argc, char **argv)
 
   rc = PWR_CntxtGetEntryPoint(cntxt, &self);
   assert(PWR_RET_SUCCESS == rc);
+
+  thread t1(metricsThread, "main_test", self);
 
   printf("HERE4\n");
 
@@ -80,8 +93,7 @@ int main(int argc, char **argv)
   assert(rc >= PWR_RET_SUCCESS);
 
   int i;
-  for (i = 0; i < PWR_GrpGetNumObjs(children); i++)
-  {
+  for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
     char name[100];
     PWR_Obj obj;
     PWR_GrpGetObjByIndx(children, i, &obj);
@@ -90,14 +102,13 @@ int main(int argc, char **argv)
     printf("child %s\n", name);
   }
 
-  pwrMetrics.getMetrics(self);
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &value, &ts);
+  // rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &value, &ts);
   assert(PWR_RET_SUCCESS == rc);
-  printf("Frequency at time %f: %lld\n", value, ts);
+  // printf("Frequency at time %f: %lld\n", value, ts);
 
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
-  assert(PWR_RET_SUCCESS == rc);
-  printf("Power at time %f: %lld\n", value, ts);
+  // rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
+  // assert(PWR_RET_SUCCESS == rc);
+  // printf("Power at time %f: %lld\n", value, ts);
 
   // Manually set power to 15 W (Not gonna work on MacOS, at least not right
   // now). value = 15.0; printf("PWR_ObjAttrSetValue(PWR_ATTR_ENERGY)
@@ -168,8 +179,6 @@ int main(int argc, char **argv)
   rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &stopFreq, &tstop2);
   assert(PWR_RET_SUCCESS == rc);
 
-  pwrMetrics.getMetrics(self);
-
   printf("Power start value: %lf, time: %lld\n", startPower, tstart);
   printf("Freq start value: %lf, time: %lld\n", startFreq, tstart2);
   printf("Power stop value: %lf, time: %lld\n", stopPower, tstop);
@@ -186,10 +195,13 @@ int main(int argc, char **argv)
   //          (double)statTimes.instant / 1000000000);
   // }
   // PWR_StatDestroy(nodeStat);
+
+  // set monitor thread to stop.
+  running = false;
+  t1.join();
 }
 
-int run(int argc, char **argv)
-{
+int run(int argc, char **argv) {
   mpiInit(&argc, &argv);
 
   Parameters params = getParameters(argc, argv);
@@ -204,8 +216,7 @@ int run(int argc, char **argv)
 
   const int nSteps = params.simulationParams.nSteps;
 
-  for (int ii = 0; ii < nSteps; ++ii)
-  {
+  for (int ii = 0; ii < nSteps; ++ii) {
     cycleInit(bool(loadBalance));
     cycleTracking(mcco);
     cycleFinalize();
@@ -234,8 +245,7 @@ int run(int argc, char **argv)
   return 0;
 }
 
-void gameOver()
-{
+void gameOver() {
   mcco->fast_timer->Cumulative_Report(
       mcco->processor_info->rank, mcco->processor_info->num_processors,
       mcco->processor_info->comm_mc_world,
@@ -243,8 +253,7 @@ void gameOver()
   mcco->_tallies->_spectrum.PrintSpectrum(mcco);
 }
 
-void cycleInit(bool loadBalance)
-{
+void cycleInit(bool loadBalance) {
 
   MC_FASTTIMER_START(MC_Fast_Timer::cycleInit);
 
@@ -276,12 +285,10 @@ void cycleInit(bool loadBalance)
 
 GLOBAL void CycleTrackingKernel(MonteCarlo *monteCarlo, int num_particles,
                                 ParticleVault *processingVault,
-                                ParticleVault *processedVault)
-{
+                                ParticleVault *processedVault) {
   int global_index = getGlobalThreadID();
 
-  if (global_index < num_particles)
-  {
+  if (global_index < num_particles) {
     CycleTrackingGuts(monteCarlo, global_index, processingVault,
                       processedVault);
   }
@@ -289,8 +296,7 @@ GLOBAL void CycleTrackingKernel(MonteCarlo *monteCarlo, int num_particles,
 
 #endif
 
-void cycleTracking(MonteCarlo *monteCarlo)
-{
+void cycleTracking(MonteCarlo *monteCarlo) {
   MC_FASTTIMER_START(MC_Fast_Timer::cycleTracking);
 
   bool done = false;
@@ -311,18 +317,15 @@ void cycleTracking(MonteCarlo *monteCarlo)
   MC_New_Test_Done_Method::Enum new_test_done_method =
       monteCarlo->particle_buffer->new_test_done_method;
 
-  do
-  {
+  do {
     int particle_count = 0; // Initialize count of num_particles processed
 
-    while (!done)
-    {
+    while (!done) {
       uint64_t fill_vault = 0;
 
       for (uint64_t processing_vault = 0;
            processing_vault < my_particle_vault.processingSize();
-           processing_vault++)
-      {
+           processing_vault++) {
         MC_FASTTIMER_START(MC_Fast_Timer::cycleTracking_Kernel);
         uint64_t processed_vault =
             my_particle_vault.getFirstEmptyProcessedVault();
@@ -334,8 +337,7 @@ void cycleTracking(MonteCarlo *monteCarlo)
 
         int numParticles = processingVault->size();
 
-        if (numParticles != 0)
-        {
+        if (numParticles != 0) {
           NVTX_Range trackingKernel(
               "cycleTracking_TrackingKernel"); // range ends at end of scope
 
@@ -344,10 +346,8 @@ void cycleTracking(MonteCarlo *monteCarlo)
           // * As an OpenMP 4.5 parallel loop on the GPU
           // * As an OpenMP 3.0 parallel loop on the CPU
           // * AS a single thread on the CPU.
-          switch (execPolicy)
-          {
-          case gpuNative:
-          {
+          switch (execPolicy) {
+          case gpuNative: {
 #if defined(GPU_NATIVE)
             dim3 grid(1, 1, 1);
             dim3 block(1, 1, 1);
@@ -363,42 +363,37 @@ void cycleTracking(MonteCarlo *monteCarlo)
             gpuPeekAtLastError();
             gpuDeviceSynchronize();
 #endif
-          }
-          break;
+          } break;
 
-          case gpuWithOpenMP:
-          {
+          case gpuWithOpenMP: {
             int nthreads = 128;
             if (numParticles < 64 * 56)
               nthreads = 64;
             int nteams = (numParticles + nthreads - 1) / nthreads;
             nteams = nteams > 1 ? nteams : 1;
 #ifdef HAVE_OPENMP_TARGET
-#pragma omp target enter data map(to : monteCarlo[0 : 1])
-#pragma omp target enter data map(to : processingVault[0 : 1])
-#pragma omp target enter data map(to : processedVault[0 : 1])
-#pragma omp target teams distribute parallel for num_teams(nteams) \
+#pragma omp target enter data map(to : monteCarlo [0:1])
+#pragma omp target enter data map(to : processingVault [0:1])
+#pragma omp target enter data map(to : processedVault [0:1])
+#pragma omp target teams distribute parallel for num_teams(nteams)             \
     thread_limit(128)
 #endif
             for (int particle_index = 0; particle_index < numParticles;
-                 particle_index++)
-            {
+                 particle_index++) {
               CycleTrackingGuts(monteCarlo, particle_index, processingVault,
                                 processedVault);
             }
 #ifdef HAVE_OPENMP_TARGET
-#pragma omp target exit data map(from : monteCarlo[0 : 1])
-#pragma omp target exit data map(from : processingVault[0 : 1])
-#pragma omp target exit data map(from : processedVault[0 : 1])
+#pragma omp target exit data map(from : monteCarlo [0:1])
+#pragma omp target exit data map(from : processingVault [0:1])
+#pragma omp target exit data map(from : processedVault [0:1])
 #endif
-          }
-          break;
+          } break;
 
           case cpu:
 #include "mc_omp_parallel_for_schedule_static.hh"
             for (int particle_index = 0; particle_index < numParticles;
-                 particle_index++)
-            {
+                 particle_index++) {
               CycleTrackingGuts(monteCarlo, particle_index, processingVault,
                                 processedVault);
             }
@@ -422,8 +417,7 @@ void cycleTracking(MonteCarlo *monteCarlo)
         monteCarlo->particle_buffer->Allocate_Send_Buffer(sendQueue);
 
         // Move particles from send queue to the send buffers
-        for (int index = 0; index < sendQueue.size(); index++)
-        {
+        for (int index = 0; index < sendQueue.size(); index++) {
           sendQueueTuple &sendQueueT = sendQueue.getTuple(index);
           MC_Base_Particle mcb_particle;
 
@@ -480,8 +474,7 @@ void cycleTracking(MonteCarlo *monteCarlo)
   MC_FASTTIMER_STOP(MC_Fast_Timer::cycleTracking);
 }
 
-void cycleFinalize()
-{
+void cycleFinalize() {
   MC_FASTTIMER_START(MC_Fast_Timer::cycleFinalize);
 
   mcco->_tallies->_balanceTask[0]._end =
