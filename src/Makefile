@@ -131,7 +131,8 @@ OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp
 OPENMP_LDFLAGS = -fopenmp
 OPTFLAGS = -g -O2
 
-CXX=g++-14
+# Only necessary on MacOS
+# CXX=g++-14
 CXXFLAGS = -std=c++11  $(OPTFLAGS) -Wpedantic -I$(POWER_LOC)/include
 CPPFLAGS = $(OPENMP_FLAGS)
 LDFLAGS = $(OPENMP_LDFLAGS) -L$(POWER_LOC)/lib -lpwr
