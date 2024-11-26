@@ -121,6 +121,7 @@ int main(int argc, char **argv) {
   assert(PWR_RET_SUCCESS == rc);
 
   rc = PWR_ObjAttrGetValues(self, 1, &name, &value, &ts, status);
+  printf("RC VALUE: %d\n", rc);
   assert(PWR_RET_SUCCESS == rc);
 
   PWR_TimeConvert(ts, &time);

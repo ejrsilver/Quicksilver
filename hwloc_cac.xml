@@ -1,0 +1,358 @@
+<System>
+    <Plugins>
+        <plugin name="CPU" lib="libpwr_cpudev"/>
+    </Plugins>
+    <Devices>
+        <device name="CPU-core" plugin="CPU" initString=""/>
+    </Devices>
+    <Locations>
+        <location name="daemon-cab0" type="rpc" config="localhost:32000" />
+    </Locations>
+    <Objects>
+        <obj name="plat" type="Platform">
+            <children>
+                <child name="node0"/>
+            </children>
+        </obj>
+        <obj name="plat.node0" type="Node">
+            <children>
+                <child name="core0"/>
+                <child name="core1"/>
+                <child name="core2"/>
+                <child name="core3"/>
+                <child name="core4"/>
+                <child name="core5"/>
+                <child name="core6"/>
+                <child name="core7"/>
+                <child name="core8"/>
+                <child name="core9"/>
+                <child name="core10"/>
+                <child name="core11"/>
+                <child name="core12"/>
+                <child name="core13"/>
+                <child name="core14"/>
+                <child name="core15"/>
+                <child name="core16"/>
+                <child name="core17"/>
+                <child name="core18"/>
+                <child name="core19"/>
+                <child name="core20"/>
+                <child name="core21"/>
+                <child name="core22"/>
+                <child name="core23"/>
+            </children>
+        </obj>
+        <obj name="plat.node0.core0" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="0" /> 
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core1" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="1"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core2" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="2"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core3" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="3"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core4" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="4"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core5" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="5"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core6" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="6"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core7" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="7"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core8" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="8"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core9" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="9"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core10" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="10"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core11" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="11"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core12" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="12"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core13" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="13"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core14" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="14"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core15" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="15"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core16" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="16"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core17" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="17"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core18" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="18"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core19" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="19"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core20" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="20"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core21" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="21"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core22" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="22"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="plat.node0.core23" type="Core">
+            <devices>
+                <dev name="dev1" device="CPU-core" openString="23"/>
+            </devices>
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+    </Objects>
+</System>

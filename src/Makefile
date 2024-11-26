@@ -1,7 +1,7 @@
 # Makefile for Quicksilver
 #
 # Modification for Power API (This should be the install directory for Power API on your system).
-POWER_LOC=/Users/ethansilver/Code/elec498/pwrapi-ref/build/install
+POWER_LOC=/global/home/hpc5573/pwrapi-ref/build/install
 
 # Quicksilver is a relatively easy to build code with no external
 # dependencies (except MPI and OpenMP).  You should be able to build
@@ -137,7 +137,7 @@ OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp
 OPENMP_LDFLAGS = -fopenmp
 OPTFLAGS = -g -O2
 
-CXX=g++-14
+CXX=g++
 CXXFLAGS = -std=c++11  $(OPTFLAGS) -Wpedantic -I$(POWER_LOC)/include
 CPPFLAGS = $(OPENMP_FLAGS)
 LDFLAGS = $(OPENMP_LDFLAGS) -L$(POWER_LOC)/lib -lpwr

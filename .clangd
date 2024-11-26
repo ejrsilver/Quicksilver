@@ -1,4 +1,4 @@
 CompileFlags:
-  Add: [-xc++, -Wall, --include-directory=/Users/ethansilver/Code/ELEC498/pwrapi-ref/build/install/include/ ]
+  Add: [-xc++, -Wall, --include-directory=/global/home/hpc5573/pwrapi-ref/ ]
   Remove: [-W*]
   Compiler: clang++
