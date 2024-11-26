@@ -38,7 +38,7 @@
             It will call the open function in the plugin with the specified openString -->
             <devices>
                 <dev name="dev1" device="PowerMetrics-core" openString="node0" /> 
-                </devices>
+            </devices>
             <!-- define all the attributes you want and which plugin will provide them.
             In this case every node and core uses 'dev1' because the PowerMetrics plugin supports that. -->
             <attributes>

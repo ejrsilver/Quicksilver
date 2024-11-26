@@ -1,8 +1,5 @@
 # Makefile for Quicksilver
 #
-# Modification for Power API (This should be the install directory for Power API on your system).
-POWER_LOC=/Users/ethansilver/Code/elec498/pwrapi-ref/build/install
-
 # Quicksilver is a relatively easy to build code with no external
 # dependencies (except MPI and OpenMP).  You should be able to build
 # Quicksilver on nearly any system by customizing the values of only
@@ -25,9 +22,6 @@ POWER_LOC=/Users/ethansilver/Code/elec498/pwrapi-ref/build/install
 # OPENMP_FLAGS, CUDA_PATH, etc) are defined for convienience and clarity
 # only.  They do not appear in the build recipes.  Only the four
 # variables above are used in the build recipes.
-#
-#
-# 
 #
 # Quicksilver recognizes a number of pre-processor macros that
 # enable or disable various code features such as MPI, OpenMP, etc.

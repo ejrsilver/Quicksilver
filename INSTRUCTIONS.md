@@ -1,18 +1,16 @@
 # Instructions for Configuring and Running Quicksilver
 
-First, change the path of your Power API install in the [Makefile](./src/Makefile) to your install directory.
+Set the following environment variable with the path of your PowerAPI install.
+This is what it looks like on my account on the CAC machine:
 
-Then, run `source xml_profile`. This will make all necessary environment variables available, and allow running Power API commands.
-
-Using the Power API command `pwrgen`, a file `hwloc.xml` will be generated. This will reflect your system configuration, without many details.
-
-Replace the empty `<Plugins/>` tag with the following:
-```xml
-    <Plugins>
-        <plugin name="RAPL" lib="libpwr_rapldev"/>
-    </Plugins>
+```bash
+POWER_LOC=/global/home/hpc5574/pwrapi-ref/build/install
 ```
 
-Then `cd` into [src](./src/) and build with `make`.
+Also edit the [xml_profile](./xml_profile) with the path to the xml file you want to use.
 
-Next, to run with RAPL, use the following command: `sudo --preserve-env ./src/qs`. If that doesn't work, `su` to root then source the profile and try again.
+Then, run `source xml_profile`. This will configure the environment variables.
+
+To build Quicksilver, `cd` into [src](./src/) and build with `make`.
+
+To run the executable, `cd` back to the base directory and run `./src/qs`.
