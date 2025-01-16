@@ -1,6 +1,7 @@
 <System>
     <Plugins>
-        <plugin name="CPU" lib="libpwr_cpudev"/>
+    	<plugin name="CPU" lib="libpwr_cpudev"/>
+	<plugin name="CPU" lib="pwr_cacdev"/>
     </Plugins>
     <Devices>
         <device name="CPU-core" plugin="CPU" initString=""/>
