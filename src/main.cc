@@ -27,7 +27,7 @@
 #include <iostream>
 #include <thread>
 
-#include "collectMetrics.cc"
+//#include "collectMetrics.cc"
 
 #include <pwr.h>
 
@@ -44,66 +44,66 @@ MonteCarlo *mcco = NULL;
 // variable set by main program to signal that program is still running
 atomic<bool> running(true);
 
-void metricsThread(const string f_name, PWR_Obj self) {
-  Metrics pwrMetrics(f_name);
+//void metricsThread(const string f_name, PWR_Obj self) {
+//  Metrics pwrMetrics(f_name);
   // collect data every 1 second while main program is still running
-  while (running) {
-    pwrMetrics.getMetrics(self);
-    this_thread::sleep_for(chrono::seconds(1));
-  }
-}
+//  while (running) {
+//    pwrMetrics.getMetrics(self);
+//    this_thread::sleep_for(chrono::seconds(1));
+//  }
+//}
 
 int main(int argc, char **argv) {
-  printf("HERE\n");
+//  printf("HERE\n");
 
-  PWR_Grp grp;
-  PWR_Obj self;
-  PWR_Cntxt cntxt;
-  time_t time;
-  int rc;
-  double value;
-  PWR_Time ts, tstart, tstop, tstart2, tstop2;
-  PWR_Status status;
+//  PWR_Grp grp;
+//  PWR_Obj self;
+//  PWR_Cntxt cntxt;
+//  time_t time;
+//  int rc;
+//  double value;
+//  PWR_Time ts, tstart, tstop, tstart2, tstop2;
+//  PWR_Status status;
 
-  printf("HERE2\n");
+//  printf("HERE2\n");
 
   // Get a context
-  rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
-  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
+//  assert(PWR_RET_SUCCESS == rc);
 
-  printf("HERE3\n");
+//  printf("HERE3\n");
 
-  rc = PWR_CntxtGetEntryPoint(cntxt, &self);
-  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_CntxtGetEntryPoint(cntxt, &self);
+//  assert(PWR_RET_SUCCESS == rc);
 
-  thread t1(metricsThread, "main_test", self);
+//  thread t1(metricsThread, "main_test", self);
 
-  printf("HERE4\n");
+//  printf("HERE4\n");
 
-  PWR_ObjType objType;
-  PWR_ObjGetType(self, &objType);
-  printf("I am a `%s`\n", PWR_ObjGetTypeString(objType));
+//  PWR_ObjType objType;
+//  PWR_ObjGetType(self, &objType);
+//  printf("I am a `%s`\n", PWR_ObjGetTypeString(objType));
 
-  PWR_Obj parent;
-  rc = PWR_ObjGetParent(self, &parent);
-  assert(rc >= PWR_RET_SUCCESS);
+//  PWR_Obj parent;
+//  rc = PWR_ObjGetParent(self, &parent);
+//  assert(rc >= PWR_RET_SUCCESS);
 
-  PWR_Grp children;
-  rc = PWR_ObjGetChildren(self, &children);
-  assert(rc >= PWR_RET_SUCCESS);
+//  PWR_Grp children;
+//  rc = PWR_ObjGetChildren(self, &children);
+//  assert(rc >= PWR_RET_SUCCESS);
 
-  int i;
-  for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
-    char name[100];
-    PWR_Obj obj;
-    PWR_GrpGetObjByIndx(children, i, &obj);
-    PWR_ObjGetName(obj, name, 100);
+//  int i;
+//  for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
+//    char name[100];
+//    PWR_Obj obj;
+//    PWR_GrpGetObjByIndx(children, i, &obj);
+//    PWR_ObjGetName(obj, name, 100);
 
-    printf("child %s\n", name);
-  }
+//    printf("child %s\n", name);
+//  }
 
   // rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &value, &ts);
-  assert(PWR_RET_SUCCESS == rc);
+//  assert(PWR_RET_SUCCESS == rc);
   // printf("Frequency at time %f: %lld\n", value, ts);
 
   // rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
@@ -115,16 +115,16 @@ int main(int argc, char **argv) {
   // value=%f\n", value); rc = PWR_ObjAttrSetValue(self, PWR_ATTR_ENERGY,
   // &value); assert(PWR_RET_SUCCESS == rc);
 
-  PWR_AttrName name = PWR_ATTR_FREQ;
+//  PWR_AttrName name = PWR_ATTR_FREQ;
 
-  rc = PWR_StatusCreate(cntxt, &status);
-  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_StatusCreate(cntxt, &status);
+//  assert(PWR_RET_SUCCESS == rc);
 
-  rc = PWR_ObjAttrGetValues(self, 1, &name, &value, &ts, status);
-  printf("RC VALUE: %d\n", rc);
-  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_ObjAttrGetValues(self, 1, &name, &value, &ts, status);
+//  printf("RC VALUE: %d\n", rc);
+//  assert(PWR_RET_SUCCESS == rc);
 
-  PWR_TimeConvert(ts, &time);
+//  PWR_TimeConvert(ts, &time);
 
   // value = 100.10;
   // printf("PWR_ObjAttrSetValues(PWR_ATTR_ENERGY) value=%f\n", value);
@@ -138,23 +138,23 @@ int main(int argc, char **argv) {
   // printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
   //        time);
   //
-  rc = PWR_CntxtGetGrpByType(cntxt, PWR_OBJ_CORE, &grp);
-  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_CntxtGetGrpByType(cntxt, PWR_OBJ_CORE, &grp);
+//  assert(PWR_RET_SUCCESS == rc);
 
   // value = 0.1;
   // printf("PWR_GrpAttrSetValue(PWR_ATTR_ENERGY) value=%f\n", value);
   // rc = PWR_GrpAttrSetValue(grp, PWR_ATTR_ENERGY, &value, status);
   // assert(PWR_RET_SUCCESS == rc);
 
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
-  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
+//  assert(PWR_RET_SUCCESS == rc);
 
-  printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
-         time);
+//  printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
+//         time);
 
-  PWR_Obj node;
-  rc = PWR_GrpGetObjByIndx(grp, 0, &node);
-  assert(PWR_RET_SUCCESS == rc);
+//  PWR_Obj node;
+//  rc = PWR_GrpGetObjByIndx(grp, 0, &node);
+//  assert(PWR_RET_SUCCESS == rc);
 
   /*
   PWR_Stat nodeStat;
@@ -167,23 +167,23 @@ int main(int argc, char **argv) {
   PWR_TimePeriod statTimes;
   statTimes.start = statTimes.stop = PWR_TIME_UNINIT;
   */
-  double startPower, stopPower, startFreq, stopFreq;
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &startPower, &tstart);
-  assert(PWR_RET_SUCCESS == rc);
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &startFreq, &tstart2);
-  assert(PWR_RET_SUCCESS == rc);
+//  double startPower, stopPower, startFreq, stopFreq;
+//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &startPower, &tstart);
+//  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &startFreq, &tstart2);
+//  assert(PWR_RET_SUCCESS == rc);
 
   run(argc, argv);
 
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
-  assert(PWR_RET_SUCCESS == rc);
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &stopFreq, &tstop2);
-  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
+//  assert(PWR_RET_SUCCESS == rc);
+//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &stopFreq, &tstop2);
+//  assert(PWR_RET_SUCCESS == rc);
 
-  printf("Power start value: %lf, time: %lld\n", startPower, tstart);
-  printf("Freq start value: %lf, time: %lld\n", startFreq, tstart2);
-  printf("Power stop value: %lf, time: %lld\n", stopPower, tstop);
-  printf("Freq stop value: %lf, time: %lld\n", stopFreq, tstop2);
+//  printf("Power start value: %lf, time: %lld\n", startPower, tstart);
+//  printf("Freq start value: %lf, time: %lld\n", startFreq, tstart2);
+//  printf("Power stop value: %lf, time: %lld\n", stopPower, tstop);
+//  printf("Freq stop value: %lf, time: %lld\n", stopFreq, tstop2);
 
   // printf("PWR_StatGetValue(PWR_ATTR_POWER) start=%lf\n",
   //        (double)statTimes.start / 1000000000);
@@ -199,7 +199,7 @@ int main(int argc, char **argv) {
 
   // set monitor thread to stop.
   running = false;
-  t1.join();
+ // t1.join();
 }
 
 int run(int argc, char **argv) {

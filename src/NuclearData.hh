@@ -9,6 +9,7 @@
 #include <algorithm>
 #include "qs_assert.hh"
 #include "DeclareMacro.hh"
+#include <cstdint>
 
 class Polynomial
 {
