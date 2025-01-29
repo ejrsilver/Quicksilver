@@ -11,13 +11,21 @@
 # distribution.
 #
 
-prefix=/global/home/hpc5573/pwrapi-ref/build/install
+prefix=/home/sam/capstone/pwrapi-ref/build/install
 
+if [ -z LD_LIBRARY_PATH ]; then
+    unset LD_LIBRARY_PATH
+fi
+
+if [ -z DYLD_LIBRARY_PATH ]; then
+    unset DYLD_LIBRARY_PATH
+fi
+ 
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${prefix}/lib"
 export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH}:${prefix}/lib"
 
 export POWERAPI_DEBUG=0
 export POWERAPI_ROOT="plat.node0"
-export POWERAPI_CONFIG="./hwloc_cac.xml"
+export POWERAPI_CONFIG="./hwloc_server.xml"
 
 export PATH="$PATH:${prefix}/lib"

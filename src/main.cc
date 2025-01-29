@@ -27,7 +27,7 @@
 #include <iostream>
 #include <thread>
 
-//#include "collectMetrics.cc"
+// #include "collectMetrics.cc"
 
 #include <pwr.h>
 
@@ -44,45 +44,38 @@ MonteCarlo *mcco = NULL;
 // variable set by main program to signal that program is still running
 atomic<bool> running(true);
 
-//void metricsThread(const string f_name, PWR_Obj self) {
+// void metricsThread(const string f_name, PWR_Obj self) {
 //  Metrics pwrMetrics(f_name);
-  // collect data every 1 second while main program is still running
+//   // collect data every 1 second while main program is still running
 //  while (running) {
 //    pwrMetrics.getMetrics(self);
 //    this_thread::sleep_for(chrono::seconds(1));
 //  }
-//}
+// }
 
 int main(int argc, char **argv) {
-//  printf("HERE\n");
 
-//  PWR_Grp grp;
-//  PWR_Obj self;
-//  PWR_Cntxt cntxt;
-//  time_t time;
-//  int rc;
-//  double value;
-//  PWR_Time ts, tstart, tstop, tstart2, tstop2;
-//  PWR_Status status;
-
-//  printf("HERE2\n");
+ PWR_Grp grp;
+ PWR_Obj self;
+ PWR_Cntxt cntxt;
+ time_t time;
+ int rc;
+ double value;
+ PWR_Time ts, tstart, tstop, tstart2, tstop2;
+ PWR_Status status;
 
   // Get a context
-//  rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
-//  assert(PWR_RET_SUCCESS == rc);
+ rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
+ assert(PWR_RET_SUCCESS == rc);
 
-//  printf("HERE3\n");
-
-//  rc = PWR_CntxtGetEntryPoint(cntxt, &self);
-//  assert(PWR_RET_SUCCESS == rc);
+ rc = PWR_CntxtGetEntryPoint(cntxt, &self);
+ assert(PWR_RET_SUCCESS == rc);
 
 //  thread t1(metricsThread, "main_test", self);
 
-//  printf("HERE4\n");
-
-//  PWR_ObjType objType;
-//  PWR_ObjGetType(self, &objType);
-//  printf("I am a `%s`\n", PWR_ObjGetTypeString(objType));
+ PWR_ObjType objType;
+ PWR_ObjGetType(self, &objType);
+ printf("I am a `%s`\n", PWR_ObjGetTypeString(objType));
 
 //  PWR_Obj parent;
 //  rc = PWR_ObjGetParent(self, &parent);

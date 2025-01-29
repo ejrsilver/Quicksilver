@@ -1,10 +1,9 @@
 <System>
     <Plugins>
-    	<plugin name="CPU" lib="libpwr_cpudev"/>
-	    <plugin name="CPU1" lib="pwr_cacdev"/>
+	    <plugin name="cacdev" lib="libpwr_cacdev"/>
     </Plugins>
     <Devices>
-        <device name="CPU-core" plugin="CPU" initString=""/>
+        <device name="CPU-core" plugin="cacdev" initString=""/>
     </Devices>
     <Locations>
         <location name="daemon-cab0" type="rpc" config="localhost:32000" />
