@@ -24,7 +24,7 @@
         </obj>
         <obj name="plat.node0.core0" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="0" /> 
+                <dev name="dev1" device="CPU-core" openString="core0" /> 
             </devices>
             <attributes>
                 <attr name="POWER" op="SUM">
@@ -37,7 +37,7 @@
         </obj>
         <obj name="plat.node0.core1" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="1"/>
+                <dev name="dev1" device="CPU-core" openString="core1"/>
             </devices>
             <attributes>
                 <attr name="POWER" op="SUM">
@@ -50,7 +50,7 @@
         </obj>
         <obj name="plat.node0.core2" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="2"/>
+                <dev name="dev1" device="CPU-core" openString="core2"/>
             </devices>
             <attributes>
                 <attr name="POWER" op="SUM">
@@ -63,7 +63,7 @@
         </obj>
         <obj name="plat.node0.core3" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="3"/>
+                <dev name="dev1" device="CPU-core" openString="core3"/>
             </devices>
             <attributes>
                 <attr name="POWER" op="SUM">

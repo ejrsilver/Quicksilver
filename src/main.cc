@@ -77,31 +77,31 @@ int main(int argc, char **argv) {
  PWR_ObjGetType(self, &objType);
  printf("I am a `%s`\n", PWR_ObjGetTypeString(objType));
 
-//  PWR_Obj parent;
-//  rc = PWR_ObjGetParent(self, &parent);
-//  assert(rc >= PWR_RET_SUCCESS);
+ PWR_Obj parent;
+ rc = PWR_ObjGetParent(self, &parent);
+ assert(rc >= PWR_RET_SUCCESS);
 
-//  PWR_Grp children;
-//  rc = PWR_ObjGetChildren(self, &children);
-//  assert(rc >= PWR_RET_SUCCESS);
+ PWR_Grp children;
+ rc = PWR_ObjGetChildren(self, &children);
+ assert(rc >= PWR_RET_SUCCESS);
 
-//  int i;
-//  for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
-//    char name[100];
-//    PWR_Obj obj;
-//    PWR_GrpGetObjByIndx(children, i, &obj);
-//    PWR_ObjGetName(obj, name, 100);
+ int i;
+ for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
+   char name[100];
+   PWR_Obj obj;
+   PWR_GrpGetObjByIndx(children, i, &obj);
+   PWR_ObjGetName(obj, name, 100);
 
-//    printf("child %s\n", name);
-//  }
+   printf("child %s\n", name);
+ }
 
-  // rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &value, &ts);
-//  assert(PWR_RET_SUCCESS == rc);
-  // printf("Frequency at time %f: %lld\n", value, ts);
+  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &value, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("Frequency at time %f: %ld\n", value, ts);
 
-  // rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
-  // assert(PWR_RET_SUCCESS == rc);
-  // printf("Power at time %f: %lld\n", value, ts);
+//   rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
+//   assert(PWR_RET_SUCCESS == rc);
+//   printf("Power at time %f: %ld\n", value, ts);
 
   // Manually set power to 15 W (Not gonna work on MacOS, at least not right
   // now). value = 15.0; printf("PWR_ObjAttrSetValue(PWR_ATTR_ENERGY)
@@ -166,7 +166,7 @@ int main(int argc, char **argv) {
 //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &startFreq, &tstart2);
 //  assert(PWR_RET_SUCCESS == rc);
 
-  run(argc, argv);
+  // run(argc, argv);
 
 //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
 //  assert(PWR_RET_SUCCESS == rc);
