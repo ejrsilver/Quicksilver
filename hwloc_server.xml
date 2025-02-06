@@ -1,6 +1,6 @@
 <System>
     <Plugins>
-	    <plugin name="cacdev" lib="libpwr_cacdev"/>
+	    <plugin name="cacdev" lib="libpwr_cpudev"/>
     </Plugins>
     <Devices>
         <device name="CPU-core" plugin="cacdev" initString=""/>
@@ -10,11 +10,28 @@
     </Locations>
     <Objects>
         <obj name="plat" type="Platform">
+            <attr name="POWER" op="SUM">
+                <src type="child" name="node0" />
+            </attr>
             <children>
                 <child name="node0"/>
             </children>
         </obj>
         <obj name="plat.node0" type="Node">
+            <attributes>
+                <attr name="POWER" op="SUM">
+                    <src type="child" name="core0" />
+                    <src type="child" name="core1" />
+                    <src type="child" name="core2" />
+                    <src type="child" name="core3" />
+                </attr>
+                <attr name="FREQ" op="AVERAGE">
+                    <src type="child" name="core0" />
+                    <src type="child" name="core1" />
+                    <src type="child" name="core2" />
+                    <src type="child" name="core3" />
+                </attr>
+            </attributes>
             <children>
                 <child name="core0"/>
                 <child name="core1"/>

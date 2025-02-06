@@ -18,6 +18,7 @@
 #include "cudaUtils.hh"
 #include "initMC.hh"
 #include "macros.hh"
+#include "pwrtypes.h"
 #include "qs_assert.hh"
 #include "utils.hh"
 #include "utilsMpi.hh"
@@ -55,69 +56,64 @@ atomic<bool> running(true);
 
 int main(int argc, char **argv) {
 
- PWR_Grp grp;
- PWR_Obj self;
- PWR_Cntxt cntxt;
- time_t time;
- int rc;
- double value;
- PWR_Time ts, tstart, tstop, tstart2, tstop2;
- PWR_Status status;
+  PWR_Grp grp;
+  PWR_Obj self;
+  PWR_Cntxt cntxt;
+  time_t time;
+  int rc;
+  double value;
+  PWR_Time ts, tstart, tstop, tstart2, tstop2;
+  PWR_Status status;
 
   // Get a context
- rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
- assert(PWR_RET_SUCCESS == rc);
-
- rc = PWR_CntxtGetEntryPoint(cntxt, &self);
- assert(PWR_RET_SUCCESS == rc);
-
-//  thread t1(metricsThread, "main_test", self);
-
- PWR_ObjType objType;
- PWR_ObjGetType(self, &objType);
- printf("I am a `%s`\n", PWR_ObjGetTypeString(objType));
-
- PWR_Obj parent;
- rc = PWR_ObjGetParent(self, &parent);
- assert(rc >= PWR_RET_SUCCESS);
-
- PWR_Grp children;
- rc = PWR_ObjGetChildren(self, &children);
- assert(rc >= PWR_RET_SUCCESS);
-
- int i;
- for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
-   char name[100];
-   PWR_Obj obj;
-   PWR_GrpGetObjByIndx(children, i, &obj);
-   PWR_ObjGetName(obj, name, 100);
-
-   printf("child %s\n", name);
- }
-
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &value, &ts);
+  rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
   assert(PWR_RET_SUCCESS == rc);
-  printf("Frequency at time %f: %ld\n", value, ts);
 
-//   rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
-//   assert(PWR_RET_SUCCESS == rc);
-//   printf("Power at time %f: %ld\n", value, ts);
+  rc = PWR_CntxtGetEntryPoint(cntxt, &self);
+  assert(PWR_RET_SUCCESS == rc);
+
+  PWR_ObjType objType;
+  PWR_ObjGetType(self, &objType);
+  printf("I am a `%s`\n", PWR_ObjGetTypeString(objType));
+
+  PWR_Grp children;
+  rc = PWR_ObjGetChildren(self, &children);
+  assert(rc >= PWR_RET_SUCCESS);
+
+  int i;
+  printf(" Device | Frequency | Power\n");
+  for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
+    char name[100];
+    double freq, power;
+    PWR_Obj obj;
+    PWR_GrpGetObjByIndx(children, i, &obj);
+    PWR_ObjGetName(obj, name, 100);
+    PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &freq, &ts);
+    assert(PWR_RET_SUCCESS == rc);
+    PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &power, &ts);
+    assert(PWR_RET_SUCCESS == rc);
+    printf(" %-6s | %-9f | %-5f\n", name, freq, power);
+  }
+
+  //   rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
+  //   assert(PWR_RET_SUCCESS == rc);
+  //   printf("Power at time %f: %ld\n", value, ts);
 
   // Manually set power to 15 W (Not gonna work on MacOS, at least not right
   // now). value = 15.0; printf("PWR_ObjAttrSetValue(PWR_ATTR_ENERGY)
   // value=%f\n", value); rc = PWR_ObjAttrSetValue(self, PWR_ATTR_ENERGY,
   // &value); assert(PWR_RET_SUCCESS == rc);
 
-//  PWR_AttrName name = PWR_ATTR_FREQ;
+  //  PWR_AttrName name = PWR_ATTR_FREQ;
 
-//  rc = PWR_StatusCreate(cntxt, &status);
-//  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_StatusCreate(cntxt, &status);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-//  rc = PWR_ObjAttrGetValues(self, 1, &name, &value, &ts, status);
-//  printf("RC VALUE: %d\n", rc);
-//  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValues(self, 1, &name, &value, &ts, status);
+  //  printf("RC VALUE: %d\n", rc);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-//  PWR_TimeConvert(ts, &time);
+  //  PWR_TimeConvert(ts, &time);
 
   // value = 100.10;
   // printf("PWR_ObjAttrSetValues(PWR_ATTR_ENERGY) value=%f\n", value);
@@ -131,23 +127,23 @@ int main(int argc, char **argv) {
   // printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
   //        time);
   //
-//  rc = PWR_CntxtGetGrpByType(cntxt, PWR_OBJ_CORE, &grp);
-//  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_CntxtGetGrpByType(cntxt, PWR_OBJ_CORE, &grp);
+  //  assert(PWR_RET_SUCCESS == rc);
 
   // value = 0.1;
   // printf("PWR_GrpAttrSetValue(PWR_ATTR_ENERGY) value=%f\n", value);
   // rc = PWR_GrpAttrSetValue(grp, PWR_ATTR_ENERGY, &value, status);
   // assert(PWR_RET_SUCCESS == rc);
 
-//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
-//  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-//  printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
-//         time);
+  //  printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
+  //         time);
 
-//  PWR_Obj node;
-//  rc = PWR_GrpGetObjByIndx(grp, 0, &node);
-//  assert(PWR_RET_SUCCESS == rc);
+  //  PWR_Obj node;
+  //  rc = PWR_GrpGetObjByIndx(grp, 0, &node);
+  //  assert(PWR_RET_SUCCESS == rc);
 
   /*
   PWR_Stat nodeStat;
@@ -160,23 +156,23 @@ int main(int argc, char **argv) {
   PWR_TimePeriod statTimes;
   statTimes.start = statTimes.stop = PWR_TIME_UNINIT;
   */
-//  double startPower, stopPower, startFreq, stopFreq;
-//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &startPower, &tstart);
-//  assert(PWR_RET_SUCCESS == rc);
-//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &startFreq, &tstart2);
-//  assert(PWR_RET_SUCCESS == rc);
+  //  double startPower, stopPower, startFreq, stopFreq;
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &startPower, &tstart);
+  //  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &startFreq, &tstart2);
+  //  assert(PWR_RET_SUCCESS == rc);
 
   // run(argc, argv);
 
-//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
-//  assert(PWR_RET_SUCCESS == rc);
-//  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &stopFreq, &tstop2);
-//  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
+  //  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &stopFreq, &tstop2);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-//  printf("Power start value: %lf, time: %lld\n", startPower, tstart);
-//  printf("Freq start value: %lf, time: %lld\n", startFreq, tstart2);
-//  printf("Power stop value: %lf, time: %lld\n", stopPower, tstop);
-//  printf("Freq stop value: %lf, time: %lld\n", stopFreq, tstop2);
+  //  printf("Power start value: %lf, time: %lld\n", startPower, tstart);
+  //  printf("Freq start value: %lf, time: %lld\n", startFreq, tstart2);
+  //  printf("Power stop value: %lf, time: %lld\n", stopPower, tstop);
+  //  printf("Freq stop value: %lf, time: %lld\n", stopFreq, tstop2);
 
   // printf("PWR_StatGetValue(PWR_ATTR_POWER) start=%lf\n",
   //        (double)statTimes.start / 1000000000);
@@ -192,7 +188,7 @@ int main(int argc, char **argv) {
 
   // set monitor thread to stop.
   running = false;
- // t1.join();
+  // t1.join();
 }
 
 int run(int argc, char **argv) {
@@ -366,9 +362,9 @@ void cycleTracking(MonteCarlo *monteCarlo) {
             int nteams = (numParticles + nthreads - 1) / nthreads;
             nteams = nteams > 1 ? nteams : 1;
 #ifdef HAVE_OPENMP_TARGET
-#pragma omp target enter data map(to : monteCarlo [0:1])
-#pragma omp target enter data map(to : processingVault [0:1])
-#pragma omp target enter data map(to : processedVault [0:1])
+#pragma omp target enter data map(to : monteCarlo[0 : 1])
+#pragma omp target enter data map(to : processingVault[0 : 1])
+#pragma omp target enter data map(to : processedVault[0 : 1])
 #pragma omp target teams distribute parallel for num_teams(nteams)             \
     thread_limit(128)
 #endif
@@ -378,9 +374,9 @@ void cycleTracking(MonteCarlo *monteCarlo) {
                                 processedVault);
             }
 #ifdef HAVE_OPENMP_TARGET
-#pragma omp target exit data map(from : monteCarlo [0:1])
-#pragma omp target exit data map(from : processingVault [0:1])
-#pragma omp target exit data map(from : processedVault [0:1])
+#pragma omp target exit data map(from : monteCarlo[0 : 1])
+#pragma omp target exit data map(from : processingVault[0 : 1])
+#pragma omp target exit data map(from : processedVault[0 : 1])
 #endif
           } break;
 

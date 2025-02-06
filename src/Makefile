@@ -1,7 +1,6 @@
 # Makefile for Quicksilver
 #
 # Modification for Power API (This should be the install directory for Power API on your system).
-POWER_LOC=/home/sam/capstone/pwrapi-ref/build/install
 
 # Quicksilver is a relatively easy to build code with no external
 # dependencies (except MPI and OpenMP).  You should be able to build
