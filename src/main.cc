@@ -101,15 +101,15 @@ int main(int argc, char **argv) {
 
     PWR_Grp cores;
     rc = PWR_ObjGetChildren(socket, &cores);
-    printf("Get Children status: %d\n", rc);
     assert(rc >= PWR_RET_SUCCESS);
 
     int j;
-    for (j = 0; j < PWR_GrpGetNumObjs(sockets); j++) {
+    for (j = 0; j < PWR_GrpGetNumObjs(cores); j++) {
       uint64_t freq, min_freq, max_freq;
       PWR_Obj core;
       PWR_ObjType coreType;
       PWR_GrpGetObjByIndx(cores, j, &core);
+      PWR_ObjGetName(core, name, 100);
 
       // Assert that we're reading a core, so we know it has frequency.
       PWR_ObjGetType(core, &coreType);

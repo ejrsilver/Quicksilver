@@ -44,7 +44,7 @@
                 <child name="core3"/>
             </children>
         </obj>
-        <obj name="sock0.node0.core0" type="Core">
+        <obj name="node0.sock0.core0" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core0" /> 
             </devices>
@@ -52,15 +52,15 @@
                 <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                <attr name="FREQ_MIN" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ_LIMIT_MAX" op="SUM">
+                <attr name="FREQ_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="sock0.node0.core1" type="Core">
+        <obj name="node0.sock0.core1" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core1"/>
             </devices>
@@ -68,15 +68,15 @@
                 <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                <attr name="FREQ_MIN" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ_LIMIT_MAX" op="SUM">
+                <attr name="FREQ_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="sock0.node0.core2" type="Core">
+        <obj name="node0.sock0.core2" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core2"/>
             </devices>
@@ -84,15 +84,15 @@
                 <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                <attr name="FREQ_MIN" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ_LIMIT_MAX" op="SUM">
+                <attr name="FREQ_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="sock0.node0.core3" type="Core">
+        <obj name="node0.sock0.core3" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core3"/>
             </devices>
@@ -100,10 +100,10 @@
                 <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                <attr name="FREQ_MIN" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ_LIMIT_MAX" op="SUM">
+                <attr name="FREQ_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
