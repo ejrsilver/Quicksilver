@@ -18,7 +18,6 @@
 #include "cudaUtils.hh"
 #include "initMC.hh"
 #include "macros.hh"
-#include "pwrtypes.h"
 #include "qs_assert.hh"
 #include "utils.hh"
 #include "utilsMpi.hh"
@@ -37,6 +36,22 @@ void gameOver();
 void cycleInit(bool loadBalance);
 void cycleTracking(MonteCarlo *monteCarlo);
 void cycleFinalize();
+
+void getGovAttrName(PWR_AttrGov gov, char *govstr, int len) {
+  if (gov == PWR_GOV_LINUX_ONDEMAND) {
+    sprintf(govstr, "ondemand");
+  } else if (gov == PWR_GOV_LINUX_PERFORMANCE) {
+    sprintf(govstr, "performance");
+  } else if (gov == PWR_GOV_LINUX_CONSERVATIVE) {
+    sprintf(govstr, "conservative");
+  } else if (gov == PWR_GOV_LINUX_POWERSAVE) {
+    sprintf(govstr, "powersave");
+  } else if (gov == PWR_GOV_LINUX_USERSPACE) {
+    sprintf(govstr, "userspace");
+  } else {
+    sprintf(govstr, "schedutil");
+  }
+}
 
 using namespace std;
 
@@ -66,7 +81,6 @@ int main(int argc, char **argv) {
   // Get a context
   rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
   assert(PWR_RET_SUCCESS == rc);
-
   rc = PWR_CntxtGetEntryPoint(cntxt, &node);
   assert(PWR_RET_SUCCESS == rc);
 
@@ -78,57 +92,61 @@ int main(int argc, char **argv) {
   rc = PWR_ObjGetChildren(node, &sockets);
   assert(rc >= PWR_RET_SUCCESS);
 
-  int i;
-  for (i = 0; i < PWR_GrpGetNumObjs(sockets); i++) {
-    char name[100];
-    uint64_t energy;
-    PWR_Obj socket;
-    PWR_ObjType socketType;
-    PWR_GrpGetObjByIndx(sockets, i, &socket);
+  char name[100];
+  uint64_t energy;
+  PWR_Obj socket;
+  PWR_ObjType socketType;
 
-    // Assert that we're reading from a socket, so that we know it has energy.
-    // Leaving in frequency stuff even though right now it'll all be zeros.
-    // Gonna try to add it in, but more doc reading necessary.
-    PWR_ObjGetType(socket, &socketType);
-    assert(socketType == PWR_OBJ_SOCKET);
+  // Get first socket.
+  PWR_GrpGetObjByIndx(sockets, 0, &socket);
 
-    PWR_ObjGetName(socket, name, 100);
-    printf(" Device | Stat Type | Stat      | Time    \n");
+  // Assert that we're reading from a socket, so that we know it has energy.
+  // Leaving in frequency stuff even though right now it'll all be zeros.
+  // Gonna try to add it in, but more doc reading necessary.
+  PWR_ObjGetType(socket, &socketType);
+  assert(socketType == PWR_OBJ_SOCKET);
 
-    PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
-    assert(PWR_RET_SUCCESS == rc);
-    printf(" %-6s | ENERGY   | %-9lu | %-8lu\n", name, energy, ts);
+  PWR_ObjGetName(socket, name, 100);
 
-    PWR_Grp cores;
-    rc = PWR_ObjGetChildren(socket, &cores);
-    assert(rc >= PWR_RET_SUCCESS);
+  PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
+  assert(PWR_RET_SUCCESS == rc);
 
-    int j;
-    for (j = 0; j < PWR_GrpGetNumObjs(cores); j++) {
-      uint64_t freq, min_freq, max_freq;
-      PWR_Obj core;
-      PWR_ObjType coreType;
-      PWR_GrpGetObjByIndx(cores, j, &core);
-      PWR_ObjGetName(core, name, 100);
+  PWR_Grp cores;
+  rc = PWR_ObjGetChildren(socket, &cores);
+  assert(rc >= PWR_RET_SUCCESS);
 
-      // Assert that we're reading a core, so we know it has frequency.
-      PWR_ObjGetType(core, &coreType);
-      assert(coreType == PWR_OBJ_CORE);
+  uint64_t max_freq, min_freq, init_freq, target_freq, current_freq = 0;
+  PWR_AttrGov gov;
+  PWR_Obj core;
+  PWR_ObjType coreType;
+  PWR_GrpGetObjByIndx(cores, 0, &core);
+  PWR_ObjGetName(core, name, 100);
 
-      PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &freq, &ts);
-      assert(PWR_RET_SUCCESS == rc);
-      printf(" %-6s | FREQ     | %-9lu | %-8lu\n", name, freq, ts);
+  // Assert that we're reading a core, so we know it has frequency.
+  PWR_ObjGetType(core, &coreType);
+  assert(coreType == PWR_OBJ_CORE);
 
-      PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ_LIMIT_MAX, &max_freq, &ts);
-      assert(PWR_RET_SUCCESS == rc);
-      printf(" %-6s | FREQ MAX | %-9lu | %-8lu\n", name, max_freq, ts);
+  // If the core isn't already in userspace mode, set it.
+  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("Initial Frequency %lu\n", init_freq);
 
-      PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ_LIMIT_MIN, &min_freq, &ts);
-      assert(PWR_RET_SUCCESS == rc);
-      printf(" %-6s | FREQ MIN | %-9lu | %-8lu\n", name, min_freq, ts);
-    }
-  }
+  gov = PWR_GOV_LINUX_USERSPACE;
+  PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
+  assert(PWR_RET_SUCCESS == rc);
 
+  target_freq = 2800000;
+  PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
+  assert(PWR_RET_SUCCESS == rc);
+
+  // while (current_freq / 1000 != target_freq/1000) {
+  //   PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
+  //   assert(PWR_RET_SUCCESS == rc);
+  //   printf(" %-9lu | %-9lu | %-8lu\n", current_freq, target_freq, ts);
+  // }
+  //
+
+  //
   //   rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
   //   assert(PWR_RET_SUCCESS == rc);
   //   printf("Power at time %f: %ld\n", value, ts);

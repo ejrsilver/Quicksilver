@@ -58,6 +58,9 @@
                 <attr name="FREQ_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
+                <attr name="GOV" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
             </attributes>
         </obj>
         <obj name="node0.sock0.core1" type="Core">
@@ -72,6 +75,9 @@
                     <src type="device" name="dev1" />
                 </attr>
                 <attr name="FREQ_MAX" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="GOV" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
@@ -90,6 +96,9 @@
                 <attr name="FREQ_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
+                <attr name="GOV" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
             </attributes>
         </obj>
         <obj name="node0.sock0.core3" type="Core">
@@ -104,6 +113,9 @@
                     <src type="device" name="dev1" />
                 </attr>
                 <attr name="FREQ_MAX" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="GOV" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
