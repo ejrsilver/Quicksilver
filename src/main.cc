@@ -55,7 +55,7 @@ atomic<bool> running(true);
 // }
 
 int main(int argc, char **argv) {
-  PWR_Obj self;
+  PWR_Obj node;
   PWR_Cntxt cntxt;
   time_t time;
   int rc;
@@ -67,38 +67,66 @@ int main(int argc, char **argv) {
   rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
   assert(PWR_RET_SUCCESS == rc);
 
-  rc = PWR_CntxtGetEntryPoint(cntxt, &self);
+  rc = PWR_CntxtGetEntryPoint(cntxt, &node);
   assert(PWR_RET_SUCCESS == rc);
 
   PWR_ObjType objType;
-  PWR_ObjGetType(self, &objType);
+  PWR_ObjGetType(node, &objType);
   assert(objType == PWR_OBJ_NODE);
 
-  PWR_Grp children;
-  rc = PWR_ObjGetChildren(self, &children);
+  PWR_Grp sockets;
+  rc = PWR_ObjGetChildren(node, &sockets);
   assert(rc >= PWR_RET_SUCCESS);
 
   int i;
-  printf(" Device | Frequency | Energy\n");
-  for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
+  for (i = 0; i < PWR_GrpGetNumObjs(sockets); i++) {
     char name[100];
-    uint64_t freq, energy;
-    PWR_Obj child;
-    PWR_ObjType childType;
-    PWR_GrpGetObjByIndx(children, i, &child);
+    uint64_t energy;
+    PWR_Obj socket;
+    PWR_ObjType socketType;
+    PWR_GrpGetObjByIndx(sockets, i, &socket);
 
     // Assert that we're reading from a socket, so that we know it has energy.
     // Leaving in frequency stuff even though right now it'll all be zeros.
     // Gonna try to add it in, but more doc reading necessary.
-    PWR_ObjGetType(child, &childType);
-    assert(childType == PWR_OBJ_SOCKET);
+    PWR_ObjGetType(socket, &socketType);
+    assert(socketType == PWR_OBJ_SOCKET);
 
-    PWR_ObjGetName(child, name, 100);
-    PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &freq, &ts);
+    PWR_ObjGetName(socket, name, 100);
+    printf(" Device | Stat Type | Stat      | Time    \n");
+
+    PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
     assert(PWR_RET_SUCCESS == rc);
-    PWR_ObjAttrGetValue(self, PWR_ATTR_ENERGY, &energy, &ts);
-    assert(PWR_RET_SUCCESS == rc);
-    printf(" %-6s | %-9lu | %-6lu\n", name, freq, energy);
+    printf(" %-6s | ENERGY   | %-9lu | %-8lu\n", name, energy, ts);
+
+    PWR_Grp cores;
+    rc = PWR_ObjGetChildren(socket, &cores);
+    printf("Get Children status: %d\n", rc);
+    assert(rc >= PWR_RET_SUCCESS);
+
+    int j;
+    for (j = 0; j < PWR_GrpGetNumObjs(sockets); j++) {
+      uint64_t freq, min_freq, max_freq;
+      PWR_Obj core;
+      PWR_ObjType coreType;
+      PWR_GrpGetObjByIndx(cores, j, &core);
+
+      // Assert that we're reading a core, so we know it has frequency.
+      PWR_ObjGetType(core, &coreType);
+      assert(coreType == PWR_OBJ_CORE);
+
+      PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &freq, &ts);
+      assert(PWR_RET_SUCCESS == rc);
+      printf(" %-6s | FREQ     | %-9lu | %-8lu\n", name, freq, ts);
+
+      PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ_LIMIT_MAX, &max_freq, &ts);
+      assert(PWR_RET_SUCCESS == rc);
+      printf(" %-6s | FREQ MAX | %-9lu | %-8lu\n", name, max_freq, ts);
+
+      PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ_LIMIT_MIN, &min_freq, &ts);
+      assert(PWR_RET_SUCCESS == rc);
+      printf(" %-6s | FREQ MIN | %-9lu | %-8lu\n", name, min_freq, ts);
+    }
   }
 
   //   rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
@@ -144,7 +172,8 @@ int main(int argc, char **argv) {
   //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
   //  assert(PWR_RET_SUCCESS == rc);
 
-  //  printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
+  //  printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n",
+  //  value,
   //         time);
 
   //  PWR_Obj node;
