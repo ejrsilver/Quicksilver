@@ -1,29 +1,34 @@
 <System>
     <Plugins>
-	    <plugin name="cacdev" lib="libpwr_cpudev"/>
+	    <plugin name="toiletdev" lib="libpwr_toiletdev"/>
     </Plugins>
     <Devices>
-        <device name="CPU-core" plugin="cacdev" initString=""/>
+        <device name="toilet-core" plugin="toiletdev" initString=""/>
     </Devices>
     <Locations>
         <location name="daemon-cab0" type="rpc" config="localhost:32000" />
     </Locations>
     <Objects>
-        <obj name="plat" type="Platform">
-            <attr name="POWER" op="SUM">
-                <src type="child" name="node0" />
-            </attr>
+        <obj name="node0" type="Node">
+            <attributes>
+                <attr name="ENERGY" op="SUM">
+                    <src type="child" name="sock0" />
+                </attr>
+                <attr name="FREQ" op="AVERAGE">
+                    <src type="child" name="sock0" />
+                </attr>
+            </attributes>
             <children>
-                <child name="node0"/>
+                <child name="sock0"/>
             </children>
         </obj>
-        <obj name="plat.node0" type="Node">
+        <obj name="node0.sock0" type="Socket">
+            <devices>
+                <dev name="dev1" device="toilet-core" openString="pkg0" /> 
+            </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
-                    <src type="child" name="core0" />
-                    <src type="child" name="core1" />
-                    <src type="child" name="core2" />
-                    <src type="child" name="core3" />
+                <attr name="ENERGY" op="SUM">
+                    <src type="device" name="dev1" />
                 </attr>
                 <attr name="FREQ" op="AVERAGE">
                     <src type="child" name="core0" />
@@ -39,53 +44,41 @@
                 <child name="core3"/>
             </children>
         </obj>
-        <obj name="plat.node0.core0" type="Core">
+        <obj name="sock0.node0.core0" type="Core">
             <devices>
                 <dev name="dev1" device="CPU-core" openString="core0" /> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
-                    <src type="device" name="dev1" />
-                </attr>
                 <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core1" type="Core">
+        <obj name="sock0.node0.core1" type="Core">
             <devices>
                 <dev name="dev1" device="CPU-core" openString="core1"/>
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
-                    <src type="device" name="dev1" />
-                </attr>
                 <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core2" type="Core">
+        <obj name="sock0.node0.core2" type="Core">
             <devices>
                 <dev name="dev1" device="CPU-core" openString="core2"/>
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
-                    <src type="device" name="dev1" />
-                </attr>
                 <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core3" type="Core">
+        <obj name="sock0.node0.core3" type="Core">
             <devices>
                 <dev name="dev1" device="CPU-core" openString="core3"/>
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
-                    <src type="device" name="dev1" />
-                </attr>
                 <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
