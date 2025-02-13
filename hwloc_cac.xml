@@ -1,21 +1,62 @@
 <System>
     <Plugins>
-    	<plugin name="CPU" lib="libpwr_cpudev"/>
-	<plugin name="CPU" lib="pwr_cacdev"/>
+    	<plugin name="toiletdev" lib="libpwr_toiletdev"/>
     </Plugins>
     <Devices>
-        <device name="CPU-core" plugin="CPU" initString=""/>
+        <device name="toilet-core" plugin="toiletdev" initString=""/>
     </Devices>
     <Locations>
         <location name="daemon-cab0" type="rpc" config="localhost:32000" />
     </Locations>
     <Objects>
-        <obj name="plat" type="Platform">
+        <obj name="node0" type="Node">
+            <attributes>
+                <attr name="ENERGY" op="SUM">
+                    <src type="child" name="sock0" />
+                </attr>
+                <attr name="FREQ" op="AVERAGE">
+                    <src type="child" name="sock0" />
+                </attr>
+            </attributes>
             <children>
-                <child name="node0"/>
+                <child name="sock0"/>
             </children>
         </obj>
-        <obj name="plat.node0" type="Node">
+        <obj name="node0.sock0" type="Socket">
+            <devices>
+                <dev name="dev1" device="toilet-core" openString="pkg0" /> 
+            </devices>
+            <attributes>
+                <attr name="ENERGY" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="AVERAGE">
+                    <src type="child" name="core0" />
+                    <src type="child" name="core1" />
+                    <src type="child" name="core2" />
+                    <src type="child" name="core3" />
+                    <src type="child" name="core4" />
+                    <src type="child" name="core5" />
+                    <src type="child" name="core6" />
+                    <src type="child" name="core7" />
+                    <src type="child" name="core8" />
+                    <src type="child" name="core9" />
+                    <src type="child" name="core10" />
+                    <src type="child" name="core11" />
+                    <src type="child" name="core12" />
+                    <src type="child" name="core13" />
+                    <src type="child" name="core14" />
+                    <src type="child" name="core15" />
+                    <src type="child" name="core16" />
+                    <src type="child" name="core17" />
+                    <src type="child" name="core18" />
+                    <src type="child" name="core19" />
+                    <src type="child" name="core20" />
+                    <src type="child" name="core21" />
+                    <src type="child" name="core22" />
+                    <src type="child" name="core23" />
+                </attr>
+            </attributes>
             <children>
                 <child name="core0"/>
                 <child name="core1"/>
@@ -43,314 +84,386 @@
                 <child name="core23"/>
             </children>
         </obj>
-        <obj name="plat.node0.core0" type="Core">
+        <obj name="plat.sock0.node0.core0" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="0" /> 
+                <dev name="dev1" device="toilet-core" openString="core0" /> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core1" type="Core">
+        <obj name="plat.sock0.node0.core1" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="1"/>
+                <dev name="dev1" device="toilet-core" openString="core1"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core2" type="Core">
+        <obj name="plat.sock0.node0.core2" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="2"/>
+                <dev name="dev1" device="toilet-core" openString="core2"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core3" type="Core">
+        <obj name="plat.sock0.node0.core3" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="3"/>
+                <dev name="dev1" device="toilet-core" openString="core3"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core4" type="Core">
+        <obj name="plat.sock0.node0.core4" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="4"/>
+                <dev name="dev1" device="toilet-core" openString="core4"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core5" type="Core">
+        <obj name="plat.sock0.node0.core5" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="5"/>
+                <dev name="dev1" device="toilet-core" openString="core5"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core6" type="Core">
+        <obj name="plat.sock0.node0.core6" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="6"/>
+                <dev name="dev1" device="toilet-core" openString="core6"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core7" type="Core">
+        <obj name="plat.sock0.node0.core7" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="7"/>
+                <dev name="dev1" device="toilet-core" openString="core7"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core8" type="Core">
+        <obj name="plat.sock0.node0.core8" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="8"/>
+                <dev name="dev1" device="toilet-core" openString="core8"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core9" type="Core">
+        <obj name="plat.sock0.node0.core9" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="9"/>
+                <dev name="dev1" device="toilet-core" openString="core9"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core10" type="Core">
+        <obj name="plat.sock0.node0.core10" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="10"/>
+                <dev name="dev1" device="toilet-core" openString="core10"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core11" type="Core">
+        <obj name="plat.sock0.node0.core11" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="11"/>
+                <dev name="dev1" device="toilet-core" openString="core11"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core12" type="Core">
+        <obj name="plat.sock0.node0.core12" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="12"/>
+                <dev name="dev1" device="toilet-core" openString="core12"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core13" type="Core">
+        <obj name="plat.sock0.node0.core13" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="13"/>
+                <dev name="dev1" device="toilet-core" openString="core13"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core14" type="Core">
+        <obj name="plat.sock0.node0.core14" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="14"/>
+                <dev name="dev1" device="toilet-core" openString="core14"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core15" type="Core">
+        <obj name="plat.sock0.node0.core15" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="15"/>
+                <dev name="dev1" device="toilet-core" openString="core15"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core16" type="Core">
+        <obj name="plat.sock0.node0.core16" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="16"/>
+                <dev name="dev1" device="toilet-core" openString="core16"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core17" type="Core">
+        <obj name="plat.sock0.node0.core17" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="17"/>
+                <dev name="dev1" device="toilet-core" openString="core17"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core18" type="Core">
+        <obj name="plat.sock0.node0.core18" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="18"/>
+                <dev name="dev1" device="toilet-core" openString="core18"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core19" type="Core">
+        <obj name="plat.sock0.node0.core19" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="19"/>
+                <dev name="dev1" device="toilet-core" openString="core19"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core20" type="Core">
+        <obj name="plat.sock0.node0.core20" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="20"/>
+                <dev name="dev1" device="toilet-core" openString="core20"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core21" type="Core">
+        <obj name="plat.sock0.node0.core21" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="21"/>
+                <dev name="dev1" device="toilet-core" openString="core21"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core22" type="Core">
+        <obj name="plat.sock0.node0.core22" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="22"/>
+                <dev name="dev1" device="toilet-core" openString="core22"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.core23" type="Core">
+        <obj name="plat.sock0.node0.core23" type="Core">
             <devices>
-                <dev name="dev1" device="CPU-core" openString="23"/>
+                <dev name="dev1" device="toilet-core" openString="core23"/> 
             </devices>
             <attributes>
-                <attr name="POWER" op="SUM">
+                <attr name="FREQ" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
-                <attr name="FREQ" op="SUM">
+                <attr name="FREQ_LIMIT_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_LIMIT_MAX" op="SUM">
                     <src type="device" name="dev1" />
                 </attr>
             </attributes>
