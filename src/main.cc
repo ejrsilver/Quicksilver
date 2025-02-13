@@ -26,6 +26,7 @@
 #include <cstdio>
 #include <iostream>
 #include <thread>
+#include <unistd.h>
 
 // #include "collectMetrics.cc"
 
@@ -136,8 +137,25 @@ int main(int argc, char **argv) {
   assert(PWR_RET_SUCCESS == rc);
 
   target_freq = 2800000;
+  printf("Setting target frequency to %lu\n", target_freq);
   PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
   assert(PWR_RET_SUCCESS == rc);
+
+  sleep(1);
+  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("Current Frequency %lu\n", current_freq);
+
+  target_freq = 1800000;
+  printf("Setting target frequency to %lu\n", target_freq);
+  PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
+  assert(PWR_RET_SUCCESS == rc);
+
+  sleep(1);
+  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("Current Frequency %lu\n", current_freq);
+
 
   // while (current_freq / 1000 != target_freq/1000) {
   //   PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
