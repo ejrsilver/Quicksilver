@@ -22,7 +22,7 @@ fi
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:${POWER_LOC}/lib"
 export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH}:${POWER_LOC}/lib"
 
-export POWERAPI_DEBUG=31
+export POWERAPI_DEBUG=0
 export POWERAPI_ROOT="node0"
 export POWERAPI_CONFIG="./hwloc_server.xml"
 
