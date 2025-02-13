@@ -27,7 +27,7 @@
 #include <iostream>
 #include <thread>
 
-#include "collectMetrics.cc"
+// #include "collectMetrics.cc"
 
 #include <pwr.h>
 
@@ -37,6 +37,22 @@ void cycleInit(bool loadBalance);
 void cycleTracking(MonteCarlo *monteCarlo);
 void cycleFinalize();
 
+void getGovAttrName(PWR_AttrGov gov, char *govstr, int len) {
+  if (gov == PWR_GOV_LINUX_ONDEMAND) {
+    sprintf(govstr, "ondemand");
+  } else if (gov == PWR_GOV_LINUX_PERFORMANCE) {
+    sprintf(govstr, "performance");
+  } else if (gov == PWR_GOV_LINUX_CONSERVATIVE) {
+    sprintf(govstr, "conservative");
+  } else if (gov == PWR_GOV_LINUX_POWERSAVE) {
+    sprintf(govstr, "powersave");
+  } else if (gov == PWR_GOV_LINUX_USERSPACE) {
+    sprintf(govstr, "userspace");
+  } else {
+    sprintf(govstr, "schedutil");
+  }
+}
+
 using namespace std;
 
 MonteCarlo *mcco = NULL;
@@ -44,20 +60,17 @@ MonteCarlo *mcco = NULL;
 // variable set by main program to signal that program is still running
 atomic<bool> running(true);
 
-void metricsThread(const string f_name, PWR_Obj self) {
-  Metrics pwrMetrics(f_name);
-  // collect data every 1 second while main program is still running
-  while (running) {
-    pwrMetrics.getMetrics(self);
-    this_thread::sleep_for(chrono::seconds(1));
-  }
-}
+// void metricsThread(const string f_name, PWR_Obj self) {
+//  Metrics pwrMetrics(f_name);
+//   // collect data every 1 second while main program is still running
+//  while (running) {
+//    pwrMetrics.getMetrics(self);
+//    this_thread::sleep_for(chrono::seconds(1));
+//  }
+// }
 
 int main(int argc, char **argv) {
-  printf("HERE\n");
-
-  PWR_Grp grp;
-  PWR_Obj self;
+  PWR_Obj node;
   PWR_Cntxt cntxt;
   time_t time;
   int rc;
@@ -65,65 +78,94 @@ int main(int argc, char **argv) {
   PWR_Time ts, tstart, tstop, tstart2, tstop2;
   PWR_Status status;
 
-  printf("HERE2\n");
-
   // Get a context
   rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
   assert(PWR_RET_SUCCESS == rc);
-
-  printf("HERE3\n");
-
-  rc = PWR_CntxtGetEntryPoint(cntxt, &self);
+  rc = PWR_CntxtGetEntryPoint(cntxt, &node);
   assert(PWR_RET_SUCCESS == rc);
-
-  thread t1(metricsThread, "main_test", self);
-
-  printf("HERE4\n");
 
   PWR_ObjType objType;
-  PWR_ObjGetType(self, &objType);
-  printf("I am a `%s`\n", PWR_ObjGetTypeString(objType));
+  PWR_ObjGetType(node, &objType);
+  assert(objType == PWR_OBJ_NODE);
 
-  PWR_Obj parent;
-  rc = PWR_ObjGetParent(self, &parent);
+  PWR_Grp sockets;
+  rc = PWR_ObjGetChildren(node, &sockets);
   assert(rc >= PWR_RET_SUCCESS);
 
-  PWR_Grp children;
-  rc = PWR_ObjGetChildren(self, &children);
-  assert(rc >= PWR_RET_SUCCESS);
+  char name[100];
+  uint64_t energy;
+  PWR_Obj socket;
+  PWR_ObjType socketType;
 
-  int i;
-  for (i = 0; i < PWR_GrpGetNumObjs(children); i++) {
-    char name[100];
-    PWR_Obj obj;
-    PWR_GrpGetObjByIndx(children, i, &obj);
-    PWR_ObjGetName(obj, name, 100);
+  // Get first socket.
+  PWR_GrpGetObjByIndx(sockets, 0, &socket);
 
-    printf("child %s\n", name);
-  }
+  // Assert that we're reading from a socket, so that we know it has energy.
+  // Leaving in frequency stuff even though right now it'll all be zeros.
+  // Gonna try to add it in, but more doc reading necessary.
+  PWR_ObjGetType(socket, &socketType);
+  assert(socketType == PWR_OBJ_SOCKET);
 
-  // rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &value, &ts);
+  PWR_ObjGetName(socket, name, 100);
+
+  PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
   assert(PWR_RET_SUCCESS == rc);
-  // printf("Frequency at time %f: %lld\n", value, ts);
 
-  // rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
-  // assert(PWR_RET_SUCCESS == rc);
-  // printf("Power at time %f: %lld\n", value, ts);
+  PWR_Grp cores;
+  rc = PWR_ObjGetChildren(socket, &cores);
+  assert(rc >= PWR_RET_SUCCESS);
+
+  uint64_t max_freq, min_freq, init_freq, target_freq, current_freq = 0;
+  PWR_AttrGov gov;
+  PWR_Obj core;
+  PWR_ObjType coreType;
+  PWR_GrpGetObjByIndx(cores, 0, &core);
+  PWR_ObjGetName(core, name, 100);
+
+  // Assert that we're reading a core, so we know it has frequency.
+  PWR_ObjGetType(core, &coreType);
+  assert(coreType == PWR_OBJ_CORE);
+
+  // If the core isn't already in userspace mode, set it.
+  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("Initial Frequency %lu\n", init_freq);
+
+  gov = PWR_GOV_LINUX_USERSPACE;
+  PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
+  assert(PWR_RET_SUCCESS == rc);
+
+  target_freq = 2800000;
+  PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
+  assert(PWR_RET_SUCCESS == rc);
+
+  // while (current_freq / 1000 != target_freq/1000) {
+  //   PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
+  //   assert(PWR_RET_SUCCESS == rc);
+  //   printf(" %-9lu | %-9lu | %-8lu\n", current_freq, target_freq, ts);
+  // }
+  //
+
+  //
+  //   rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
+  //   assert(PWR_RET_SUCCESS == rc);
+  //   printf("Power at time %f: %ld\n", value, ts);
 
   // Manually set power to 15 W (Not gonna work on MacOS, at least not right
   // now). value = 15.0; printf("PWR_ObjAttrSetValue(PWR_ATTR_ENERGY)
   // value=%f\n", value); rc = PWR_ObjAttrSetValue(self, PWR_ATTR_ENERGY,
   // &value); assert(PWR_RET_SUCCESS == rc);
 
-  PWR_AttrName name = PWR_ATTR_FREQ;
+  //  PWR_AttrName name = PWR_ATTR_FREQ;
 
-  rc = PWR_StatusCreate(cntxt, &status);
-  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_StatusCreate(cntxt, &status);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-  rc = PWR_ObjAttrGetValues(self, 1, &name, &value, &ts, status);
-  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValues(self, 1, &name, &value, &ts, status);
+  //  printf("RC VALUE: %d\n", rc);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-  PWR_TimeConvert(ts, &time);
+  //  PWR_TimeConvert(ts, &time);
 
   // value = 100.10;
   // printf("PWR_ObjAttrSetValues(PWR_ATTR_ENERGY) value=%f\n", value);
@@ -137,23 +179,24 @@ int main(int argc, char **argv) {
   // printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
   //        time);
   //
-  rc = PWR_CntxtGetGrpByType(cntxt, PWR_OBJ_CORE, &grp);
-  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_CntxtGetGrpByType(cntxt, PWR_OBJ_CORE, &grp);
+  //  assert(PWR_RET_SUCCESS == rc);
 
   // value = 0.1;
   // printf("PWR_GrpAttrSetValue(PWR_ATTR_ENERGY) value=%f\n", value);
   // rc = PWR_GrpAttrSetValue(grp, PWR_ATTR_ENERGY, &value, status);
   // assert(PWR_RET_SUCCESS == rc);
 
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
-  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &value, &ts);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-  printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n", value,
-         time);
+  //  printf("PWR_ObjAttrGetValue(PWR_ATTR_ENERGY) value=%f ts=`%ld`\n",
+  //  value,
+  //         time);
 
-  PWR_Obj node;
-  rc = PWR_GrpGetObjByIndx(grp, 0, &node);
-  assert(PWR_RET_SUCCESS == rc);
+  //  PWR_Obj node;
+  //  rc = PWR_GrpGetObjByIndx(grp, 0, &node);
+  //  assert(PWR_RET_SUCCESS == rc);
 
   /*
   PWR_Stat nodeStat;
@@ -166,23 +209,23 @@ int main(int argc, char **argv) {
   PWR_TimePeriod statTimes;
   statTimes.start = statTimes.stop = PWR_TIME_UNINIT;
   */
-  double startPower, stopPower, startFreq, stopFreq;
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &startPower, &tstart);
-  assert(PWR_RET_SUCCESS == rc);
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &startFreq, &tstart2);
-  assert(PWR_RET_SUCCESS == rc);
+  //  double startPower, stopPower, startFreq, stopFreq;
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &startPower, &tstart);
+  //  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &startFreq, &tstart2);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-  run(argc, argv);
+  // run(argc, argv);
 
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
-  assert(PWR_RET_SUCCESS == rc);
-  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &stopFreq, &tstop2);
-  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
+  //  assert(PWR_RET_SUCCESS == rc);
+  //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &stopFreq, &tstop2);
+  //  assert(PWR_RET_SUCCESS == rc);
 
-  printf("Power start value: %lf, time: %lld\n", startPower, tstart);
-  printf("Freq start value: %lf, time: %lld\n", startFreq, tstart2);
-  printf("Power stop value: %lf, time: %lld\n", stopPower, tstop);
-  printf("Freq stop value: %lf, time: %lld\n", stopFreq, tstop2);
+  //  printf("Power start value: %lf, time: %lld\n", startPower, tstart);
+  //  printf("Freq start value: %lf, time: %lld\n", startFreq, tstart2);
+  //  printf("Power stop value: %lf, time: %lld\n", stopPower, tstop);
+  //  printf("Freq stop value: %lf, time: %lld\n", stopFreq, tstop2);
 
   // printf("PWR_StatGetValue(PWR_ATTR_POWER) start=%lf\n",
   //        (double)statTimes.start / 1000000000);
@@ -198,7 +241,7 @@ int main(int argc, char **argv) {
 
   // set monitor thread to stop.
   running = false;
-  t1.join();
+  // t1.join();
 }
 
 int run(int argc, char **argv) {
@@ -372,9 +415,9 @@ void cycleTracking(MonteCarlo *monteCarlo) {
             int nteams = (numParticles + nthreads - 1) / nthreads;
             nteams = nteams > 1 ? nteams : 1;
 #ifdef HAVE_OPENMP_TARGET
-#pragma omp target enter data map(to : monteCarlo [0:1])
-#pragma omp target enter data map(to : processingVault [0:1])
-#pragma omp target enter data map(to : processedVault [0:1])
+#pragma omp target enter data map(to : monteCarlo[0 : 1])
+#pragma omp target enter data map(to : processingVault[0 : 1])
+#pragma omp target enter data map(to : processedVault[0 : 1])
 #pragma omp target teams distribute parallel for num_teams(nteams)             \
     thread_limit(128)
 #endif
@@ -384,9 +427,9 @@ void cycleTracking(MonteCarlo *monteCarlo) {
                                 processedVault);
             }
 #ifdef HAVE_OPENMP_TARGET
-#pragma omp target exit data map(from : monteCarlo [0:1])
-#pragma omp target exit data map(from : processingVault [0:1])
-#pragma omp target exit data map(from : processedVault [0:1])
+#pragma omp target exit data map(from : monteCarlo[0 : 1])
+#pragma omp target exit data map(from : processingVault[0 : 1])
+#pragma omp target exit data map(from : processedVault[0 : 1])
 #endif
           } break;
 

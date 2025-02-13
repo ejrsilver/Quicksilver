@@ -1,0 +1,124 @@
+<System>
+    <Plugins>
+	    <plugin name="toiletdev" lib="libpwr_toiletdev"/>
+    </Plugins>
+    <Devices>
+        <device name="toilet-core" plugin="toiletdev" initString=""/>
+    </Devices>
+    <Locations>
+        <location name="daemon-cab0" type="rpc" config="localhost:32000" />
+    </Locations>
+    <Objects>
+        <obj name="node0" type="Node">
+            <attributes>
+                <attr name="ENERGY" op="SUM">
+                    <src type="child" name="sock0" />
+                </attr>
+                <attr name="FREQ" op="AVERAGE">
+                    <src type="child" name="sock0" />
+                </attr>
+            </attributes>
+            <children>
+                <child name="sock0"/>
+            </children>
+        </obj>
+        <obj name="node0.sock0" type="Socket">
+            <devices>
+                <dev name="dev1" device="toilet-core" openString="pkg0" /> 
+            </devices>
+            <attributes>
+                <attr name="ENERGY" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ" op="AVERAGE">
+                    <src type="child" name="core0" />
+                    <src type="child" name="core1" />
+                    <src type="child" name="core2" />
+                    <src type="child" name="core3" />
+                </attr>
+            </attributes>
+            <children>
+                <child name="core0"/>
+                <child name="core1"/>
+                <child name="core2"/>
+                <child name="core3"/>
+            </children>
+        </obj>
+        <obj name="node0.sock0.core0" type="Core">
+            <devices>
+                <dev name="dev1" device="toilet-core" openString="core0" /> 
+            </devices>
+            <attributes>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_MAX" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="GOV" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="node0.sock0.core1" type="Core">
+            <devices>
+                <dev name="dev1" device="toilet-core" openString="core1"/>
+            </devices>
+            <attributes>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_MAX" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="GOV" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="node0.sock0.core2" type="Core">
+            <devices>
+                <dev name="dev1" device="toilet-core" openString="core2"/>
+            </devices>
+            <attributes>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_MAX" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="GOV" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+        <obj name="node0.sock0.core3" type="Core">
+            <devices>
+                <dev name="dev1" device="toilet-core" openString="core3"/>
+            </devices>
+            <attributes>
+                <attr name="FREQ" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_MIN" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="FREQ_MAX" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+                <attr name="GOV" op="SUM">
+                    <src type="device" name="dev1" />
+                </attr>
+            </attributes>
+        </obj>
+    </Objects>
+</System>

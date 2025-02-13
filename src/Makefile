@@ -1,5 +1,5 @@
 # Makefile for Quicksilver
-#
+
 # Quicksilver is a relatively easy to build code with no external
 # dependencies (except MPI and OpenMP).  You should be able to build
 # Quicksilver on nearly any system by customizing the values of only
@@ -131,11 +131,10 @@ OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp
 OPENMP_LDFLAGS = -fopenmp
 OPTFLAGS = -g -O2
 
-# Only necessary on MacOS
-# CXX=g++-14
+CXX=g++
 CXXFLAGS = -std=c++11  $(OPTFLAGS) -Wpedantic -I$(POWER_LOC)/include
 CPPFLAGS = $(OPENMP_FLAGS)
-LDFLAGS = $(OPENMP_LDFLAGS) -L$(POWER_LOC)/lib -lpwr
+LDFLAGS = $(OPENMP_LDFLAGS) -L$(POWER_LOC)/lib -lpwr -lpwr_toiletdev 
 
 
 ###############################################################################
@@ -345,7 +344,7 @@ git_vers.hh:
 	${CXX} ${CPPFLAGS} ${CXXFLAGS} -c $< -o $@
 
 ${Quicksilver_EXE}: git_hash.hh git_vers.hh ${CC_OBJECTS}  
-	${CXX} ${CXXFLAGS} ${LDFLAGS} -o ${Quicksilver_EXE} ${CC_OBJECTS}
+	${CXX} ${CXXFLAGS} -o ${Quicksilver_EXE} ${CC_OBJECTS} ${LDFLAGS}
 
 clean:
 	rm -f *.o git_hash.hh git_vers.hh .depend load.map *.core *.optrpt

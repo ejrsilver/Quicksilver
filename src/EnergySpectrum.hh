@@ -2,6 +2,7 @@
 #define ENERGYSPECTRUM_HH
 #include <string>
 #include <vector>
+#include <cstdint>
 
 class MonteCarlo;
 

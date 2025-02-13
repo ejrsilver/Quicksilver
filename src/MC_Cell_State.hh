@@ -4,7 +4,7 @@
 #include <cstdio>
 #include "QS_Vector.hh"
 #include "macros.hh"
-
+#include <cstdint>
 
 // this stores all the material information on a cell
 class MC_Cell_State
