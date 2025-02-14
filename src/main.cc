@@ -71,14 +71,30 @@ atomic<bool> running(true);
 //  }
 // }
 
+
+PWR_Obj node;
+PWR_Cntxt cntxt;
+//time_t time;
+int rc;
+double value;
+PWR_Time ts, tstart, tstop, tstart2, tstop2;
+PWR_Status status;
+
+PWR_Grp sockets;
+char name[100];
+uint64_t energy;
+PWR_Obj socket;
+PWR_ObjType socketType;
+char socket_name[100];
+PWR_Grp cores;
+PWR_AttrGov gov;
+PWR_Obj core;
+PWR_ObjType coreType;
+
+//To create hint for socket
+uint64_t region_id_parallel;
+
 int main(int argc, char **argv) {
-  PWR_Obj node;
-  PWR_Cntxt cntxt;
-  time_t time;
-  int rc;
-  double value;
-  PWR_Time ts, tstart, tstop, tstart2, tstop2;
-  PWR_Status status;
 
   // Get a context
   rc = PWR_CntxtInit(PWR_CNTXT_DEFAULT, PWR_ROLE_APP, "App", &cntxt);
@@ -90,14 +106,10 @@ int main(int argc, char **argv) {
   PWR_ObjGetType(node, &objType);
   assert(objType == PWR_OBJ_NODE);
 
-  PWR_Grp sockets;
+  
   rc = PWR_ObjGetChildren(node, &sockets);
   assert(rc >= PWR_RET_SUCCESS);
 
-  char name[100];
-  uint64_t energy;
-  PWR_Obj socket;
-  PWR_ObjType socketType;
 
   // Get first socket.
   PWR_GrpGetObjByIndx(sockets, 0, &socket);
@@ -108,36 +120,34 @@ int main(int argc, char **argv) {
   PWR_ObjGetType(socket, &socketType);
   assert(socketType == PWR_OBJ_SOCKET);
 
-  char socket_name[100];
+  
   PWR_ObjGetName(socket, socket_name, 100);
 
   PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
   assert(PWR_RET_SUCCESS == rc);
 
-  PWR_Grp cores;
+  
   rc = PWR_ObjGetChildren(socket, &cores);
   assert(rc >= PWR_RET_SUCCESS);
 
   uint64_t max_freq, min_freq, init_freq, target_freq, current_freq = 0;
-  PWR_AttrGov gov;
-  PWR_Obj core;
-  PWR_ObjType coreType;
+
   PWR_GrpGetObjByIndx(cores, 0, &core);
   PWR_ObjGetName(core, name, 100);
 
   // Assert that we're reading a core, so we know it has frequency.
-  PWR_ObjGetType(core, &coreType);
-  assert(coreType == PWR_OBJ_CORE);
+  // PWR_ObjGetType(core, &coreType);
+  // assert(coreType == PWR_OBJ_CORE);
 
   
-  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
-  assert(PWR_RET_SUCCESS == rc);
-  printf("Initial Frequency %lu\n", init_freq);
+  // PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
+  // assert(PWR_RET_SUCCESS == rc);
+  // printf("Initial Frequency %lu\n", init_freq);
 
   // If the core isn't already in userspace mode, set it.
   gov = PWR_GOV_LINUX_USERSPACE;
-  PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
-  assert(PWR_RET_SUCCESS == rc);
+  //PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
+  //assert(PWR_RET_SUCCESS == rc);
 
   // target_freq = 2800000;
   // printf("Setting target frequency to %lu\n", target_freq);
@@ -161,21 +171,20 @@ int main(int argc, char **argv) {
 
 
  //CREATE HINT for socket
- uint64_t region_id_socket;
- PWR_AppHintCreate(socket, socket_name, &region_id_socket, PWR_REGION_PARALLEL);
- printf("region id: %ld\n", region_id_socket);
+ PWR_AppHintCreate(socket, socket_name, &region_id_parallel, PWR_REGION_PARALLEL);
+ printf("region id: %ld\n", region_id_parallel);
 
  //START HINT for socket
-  PWR_AppHintStart(&region_id_socket);
-  sleep(10);
+  //PWR_AppHintStart(&region_id_socket);
+  //sleep(10);
 
   //STOP HINT for socket
-  PWR_AppHintStop(&region_id_socket);
-  sleep(1);
+  //PWR_AppHintStop(&region_id_socket);
+  //sleep(1);
 
 
  //DESTROY HINT for socket
-  PWR_AppHintDestroy(&region_id_socket);
+  //PWR_AppHintDestroy(&region_id_socket);
 
 
 
@@ -255,7 +264,8 @@ int main(int argc, char **argv) {
   //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_FREQ, &startFreq, &tstart2);
   //  assert(PWR_RET_SUCCESS == rc);
 
-  // run(argc, argv);
+  run(argc, argv);
+  PWR_AppHintDestroy(&region_id_parallel);
 
   //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
   //  assert(PWR_RET_SUCCESS == rc);
@@ -282,6 +292,8 @@ int main(int argc, char **argv) {
   // set monitor thread to stop.
   running = false;
   // t1.join();
+
+  return 1;
 }
 
 int run(int argc, char **argv) {
@@ -301,7 +313,13 @@ int run(int argc, char **argv) {
 
   for (int ii = 0; ii < nSteps; ++ii) {
     cycleInit(bool(loadBalance));
+    
+    //START HINT for Parallel
+    PWR_AppHintStart(&region_id_parallel);
     cycleTracking(mcco);
+    //END HINT for Parallel
+    PWR_AppHintStop(&region_id_parallel);
+
     cycleFinalize();
 
     mcco->fast_timer->Last_Cycle_Report(params.simulationParams.cycleTimers,
