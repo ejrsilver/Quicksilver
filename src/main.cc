@@ -129,11 +129,12 @@ int main(int argc, char **argv) {
   PWR_ObjGetType(core, &coreType);
   assert(coreType == PWR_OBJ_CORE);
 
-  // If the core isn't already in userspace mode, set it.
+  
   PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
   assert(PWR_RET_SUCCESS == rc);
   printf("Initial Frequency %lu\n", init_freq);
 
+  // If the core isn't already in userspace mode, set it.
   gov = PWR_GOV_LINUX_USERSPACE;
   PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
   assert(PWR_RET_SUCCESS == rc);
