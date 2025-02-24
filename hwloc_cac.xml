@@ -60,7 +60,7 @@
                 <child name="core11"/>
             </children>
         </obj>
-        <obj name="node0.sock0" type="Socket">
+        <obj name="node0.sock1" type="Socket">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="pkg0" /> 
             </devices>
