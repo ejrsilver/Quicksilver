@@ -129,7 +129,7 @@ SHELL = /bin/bash
 #
 OPENMP_FLAGS = -DHAVE_OPENMP -fopenmp 
 OPENMP_LDFLAGS = -fopenmp
-OPTFLAGS = -g -O2
+OPTFLAGS = -g -O2 -pg
 
 CXX=g++
 CXXFLAGS = -std=c++11  $(OPTFLAGS) -Wpedantic -I$(POWER_LOC)/include

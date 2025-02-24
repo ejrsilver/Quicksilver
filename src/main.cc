@@ -171,8 +171,8 @@ int main(int argc, char **argv) {
 
 
  //CREATE HINT for socket
- PWR_AppHintCreate(socket, socket_name, &region_id_parallel, PWR_REGION_PARALLEL);
- printf("region id: %ld\n", region_id_parallel);
+//  PWR_AppHintCreate(socket, socket_name, &region_id_parallel, PWR_REGION_PARALLEL);
+//  printf("region id: %ld\n", region_id_parallel);
 
  //START HINT for socket
   //PWR_AppHintStart(&region_id_socket);
@@ -265,7 +265,7 @@ int main(int argc, char **argv) {
   //  assert(PWR_RET_SUCCESS == rc);
 
   run(argc, argv);
-  PWR_AppHintDestroy(&region_id_parallel);
+  // PWR_AppHintDestroy(&region_id_parallel);
 
   //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
   //  assert(PWR_RET_SUCCESS == rc);
@@ -314,11 +314,11 @@ int run(int argc, char **argv) {
   for (int ii = 0; ii < nSteps; ++ii) {
     cycleInit(bool(loadBalance));
     
-    //START HINT for Parallel
-    PWR_AppHintStart(&region_id_parallel);
-    cycleTracking(mcco);
-    //END HINT for Parallel
-    PWR_AppHintStop(&region_id_parallel);
+    // //START HINT for Parallel
+    // PWR_AppHintStart(&region_id_parallel);
+    // cycleTracking(mcco);
+    // //END HINT for Parallel
+    // PWR_AppHintStop(&region_id_parallel);
 
     cycleFinalize();
 

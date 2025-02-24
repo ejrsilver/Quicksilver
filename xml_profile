@@ -16,6 +16,7 @@ export DYLD_LIBRARY_PATH="${DYLD_LIBRARY_PATH}:${POWER_LOC}/lib"
 
 export POWERAPI_DEBUG=0
 export POWERAPI_ROOT="node0"
-export POWERAPI_CONFIG="./hwloc_server.xml"
+export POWERAPI_CONFIG="/home/sam/capstone/Quicksilver/hwloc_server.xml"
+
 
 export PATH="$PATH:${POWER_LOC}/lib"
