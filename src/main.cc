@@ -314,10 +314,10 @@ int run(int argc, char **argv) {
   for (int ii = 0; ii < nSteps; ++ii) {
     cycleInit(bool(loadBalance));
     
-    // //START HINT for Parallel
+    //START HINT for Parallel
     // PWR_AppHintStart(&region_id_parallel);
-    // cycleTracking(mcco);
-    // //END HINT for Parallel
+    cycleTracking(mcco);
+    //END HINT for Parallel
     // PWR_AppHintStop(&region_id_parallel);
 
     cycleFinalize();
