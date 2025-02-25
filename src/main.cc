@@ -83,10 +83,13 @@ PWR_Status status;
 PWR_Grp sockets;
 char name[100];
 uint64_t energy;
-PWR_Obj socket;
+PWR_Obj socket1;
+PWR_Obj socket2;
 PWR_ObjType socketType;
-char socket_name[100];
-PWR_Grp cores;
+char socket_name1[100];
+char socket_name2[100];
+PWR_Grp cores1;
+PWR_Grp cores2;
 PWR_AttrGov gov;
 PWR_Obj core;
 PWR_ObjType coreType;
@@ -110,26 +113,36 @@ int main(int argc, char **argv) {
   assert(rc >= PWR_RET_SUCCESS);
 
   // Get first socket.
-  PWR_GrpGetObjByIndx(sockets, 0, &socket);
+  PWR_GrpGetObjByIndx(sockets, 0, &socket1);
+  // Get second socket
+  PWR_GrpGetObjByIndx(sockets, 1, &socket2);
 
   // Assert that we're reading from a socket, so that we know it has energy.
   // Leaving in frequency stuff even though right now it'll all be zeros.
   // Gonna try to add it in, but more doc reading necessary.
-  PWR_ObjGetType(socket, &socketType);
+  PWR_ObjGetType(socket1, &socketType);
   assert(socketType == PWR_OBJ_SOCKET);
 
-  PWR_ObjGetName(socket, socket_name, 100);
+  PWR_ObjGetType(socket2, &socketType);
+  assert(socketType == PWR_OBJ_SOCKET);
+
+  
+  PWR_ObjGetName(socket1, socket_name1, 100);
+  PWR_ObjGetName(socket1, socket_name2, 100);
 
   PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
   assert(PWR_RET_SUCCESS == rc);
 
   
-  rc = PWR_ObjGetChildren(socket, &cores);
+  rc = PWR_ObjGetChildren(socket1, &cores1);
+  assert(rc >= PWR_RET_SUCCESS);
+
+  rc = PWR_ObjGetChildren(socket2, &cores2);
   assert(rc >= PWR_RET_SUCCESS);
 
   uint64_t max_freq, min_freq, init_freq, target_freq, current_freq = 0;
 
-  PWR_GrpGetObjByIndx(cores, 0, &core);
+  PWR_GrpGetObjByIndx(cores1, 0, &core);
   PWR_ObjGetName(core, name, 100);
 
   // Assert that we're reading a core, so we know it has frequency.
@@ -168,7 +181,8 @@ int main(int argc, char **argv) {
 
 
  //CREATE HINT for socket
- PWR_AppHintCreate(socket, socket_name, &region_id_parallel, PWR_REGION_PARALLEL);
+ PWR_AppHintCreate(socket1, socket_name1, &region_id_parallel, PWR_REGION_PARALLEL);
+ PWR_AppHintCreate(socket2, socket_name2, &region_id_parallel, PWR_REGION_PARALLEL);
  printf("region id: %ld\n", region_id_parallel);
 
  //START HINT for socket
