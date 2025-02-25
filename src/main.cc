@@ -106,10 +106,8 @@ int main(int argc, char **argv) {
   PWR_ObjGetType(node, &objType);
   assert(objType == PWR_OBJ_NODE);
 
-  
   rc = PWR_ObjGetChildren(node, &sockets);
   assert(rc >= PWR_RET_SUCCESS);
-
 
   // Get first socket.
   PWR_GrpGetObjByIndx(sockets, 0, &socket);
@@ -120,7 +118,6 @@ int main(int argc, char **argv) {
   PWR_ObjGetType(socket, &socketType);
   assert(socketType == PWR_OBJ_SOCKET);
 
-  
   PWR_ObjGetName(socket, socket_name, 100);
 
   PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
