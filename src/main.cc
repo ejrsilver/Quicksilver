@@ -94,8 +94,8 @@ PWR_AttrGov gov;
 PWR_Obj core;
 PWR_ObjType coreType;
 
-//To create hint for socket
-uint64_t region_id_parallel;
+//To create hint for sockets on CAC
+uint64_t region_id_parallel_socket1, region_id_parallel_socket2;
 
 int main(int argc, char **argv) {
 
@@ -181,9 +181,10 @@ int main(int argc, char **argv) {
 
 
  //CREATE HINT for socket
- PWR_AppHintCreate(socket1, socket_name1, &region_id_parallel, PWR_REGION_PARALLEL);
- PWR_AppHintCreate(socket2, socket_name2, &region_id_parallel, PWR_REGION_PARALLEL);
- printf("region id: %ld\n", region_id_parallel);
+ PWR_AppHintCreate(socket1, socket_name1, &region_id_parallel_socket1, PWR_REGION_PARALLEL);
+ PWR_AppHintCreate(socket2, socket_name2, &region_id_parallel_socket2, PWR_REGION_PARALLEL);
+ printf("region id socket1: %ld\n", region_id_parallel_socket1);
+ printf("region id socket2: %ld\n", region_id_parallel_socket2);
 
  //START HINT for socket
   //PWR_AppHintStart(&region_id_socket);
@@ -276,7 +277,8 @@ int main(int argc, char **argv) {
   //  assert(PWR_RET_SUCCESS == rc);
 
   run(argc, argv);
-  PWR_AppHintDestroy(&region_id_parallel);
+  PWR_AppHintDestroy(&region_id_parallel_socket1);
+  PWR_AppHintDestroy(&region_id_parallel_socket2);
 
   //  rc = PWR_ObjAttrGetValue(self, PWR_ATTR_POWER, &stopPower, &tstop);
   //  assert(PWR_RET_SUCCESS == rc);
@@ -326,10 +328,12 @@ int run(int argc, char **argv) {
     cycleInit(bool(loadBalance));
     
     //START HINT for Parallel
-    PWR_AppHintStart(&region_id_parallel);
+    PWR_AppHintStart(&region_id_parallel_socket1);
+    PWR_AppHintStart(&region_id_parallel_socket2);
     cycleTracking(mcco);
     //END HINT for Parallel
-    PWR_AppHintStop(&region_id_parallel);
+    PWR_AppHintStop(&region_id_parallel_socket1);
+    PWR_AppHintStop(&region_id_parallel_socket2);
 
     cycleFinalize();
 
