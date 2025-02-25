@@ -109,10 +109,8 @@ int main(int argc, char **argv) {
   PWR_ObjGetType(node, &objType);
   assert(objType == PWR_OBJ_NODE);
 
-  
   rc = PWR_ObjGetChildren(node, &sockets);
   assert(rc >= PWR_RET_SUCCESS);
-
 
   // Get first socket.
   PWR_GrpGetObjByIndx(sockets, 0, &socket1);

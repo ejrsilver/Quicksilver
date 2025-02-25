@@ -20,6 +20,7 @@
             </attributes>
             <children>
                 <child name="sock0"/>
+                <child name="sock1"/>
             </children>
         </obj>
         <obj name="node0.sock0" type="Socket">
@@ -62,7 +63,7 @@
         </obj>
         <obj name="node0.sock1" type="Socket">
             <devices>
-                <dev name="dev1" device="toilet-core" openString="pkg0" /> 
+                <dev name="dev1" device="toilet-core" openString="pkg1" /> 
             </devices>
             <attributes>
                 <attr name="ENERGY" op="SUM">
@@ -98,7 +99,7 @@
                 <child name="core23"/>
             </children>
         </obj>
-        <obj name="plat.node0.sock0.core0" type="Core">
+        <obj name="node0.sock0.core0" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core0" /> 
             </devices>
@@ -117,7 +118,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core1" type="Core">
+        <obj name="node0.sock0.core1" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core1"/> 
             </devices>
@@ -136,7 +137,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core2" type="Core">
+        <obj name="node0.sock0.core2" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core2"/> 
             </devices>
@@ -155,7 +156,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core3" type="Core">
+        <obj name="node0.sock0.core3" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core3"/> 
             </devices>
@@ -174,7 +175,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core4" type="Core">
+        <obj name="node0.sock0.core4" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core4"/> 
             </devices>
@@ -193,7 +194,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core5" type="Core">
+        <obj name="node0.sock0.core5" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core5"/> 
             </devices>
@@ -212,7 +213,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core6" type="Core">
+        <obj name="node0.sock0.core6" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core6"/> 
             </devices>
@@ -231,7 +232,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core7" type="Core">
+        <obj name="node0.sock0.core7" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core7"/> 
             </devices>
@@ -250,7 +251,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core8" type="Core">
+        <obj name="node0.sock0.core8" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core8"/> 
             </devices>
@@ -269,7 +270,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core9" type="Core">
+        <obj name="node0.sock0.core9" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core9"/> 
             </devices>
@@ -288,7 +289,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core10" type="Core">
+        <obj name="node0.sock0.core10" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core10"/> 
             </devices>
@@ -307,7 +308,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock0.core11" type="Core">
+        <obj name="node0.sock0.core11" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core11"/> 
             </devices>
@@ -326,7 +327,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core12" type="Core">
+        <obj name="node0.sock1.core12" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core12"/> 
             </devices>
@@ -345,7 +346,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core13" type="Core">
+        <obj name="node0.sock1.core13" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core13"/> 
             </devices>
@@ -364,7 +365,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core14" type="Core">
+        <obj name="node0.sock1.core14" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core14"/> 
             </devices>
@@ -383,7 +384,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core15" type="Core">
+        <obj name="node0.sock1.core15" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core15"/> 
             </devices>
@@ -402,7 +403,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core16" type="Core">
+        <obj name="node0.sock1.core16" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core16"/> 
             </devices>
@@ -421,7 +422,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core17" type="Core">
+        <obj name="node0.sock1.core17" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core17"/> 
             </devices>
@@ -440,7 +441,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core18" type="Core">
+        <obj name="node0.sock1.core18" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core18"/> 
             </devices>
@@ -459,7 +460,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core19" type="Core">
+        <obj name="node0.sock1.core19" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core19"/> 
             </devices>
@@ -478,7 +479,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core20" type="Core">
+        <obj name="node0.sock1.core20" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core20"/> 
             </devices>
@@ -497,7 +498,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core21" type="Core">
+        <obj name="node0.sock1.core21" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core21"/> 
             </devices>
@@ -516,7 +517,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core22" type="Core">
+        <obj name="node0.sock1.core22" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core22"/> 
             </devices>
@@ -535,7 +536,7 @@
                 </attr>
             </attributes>
         </obj>
-        <obj name="plat.node0.sock1.core23" type="Core">
+        <obj name="node0.sock1.core23" type="Core">
             <devices>
                 <dev name="dev1" device="toilet-core" openString="core23"/> 
             </devices>
