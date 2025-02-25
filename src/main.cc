@@ -144,10 +144,10 @@ int main(int argc, char **argv) {
   // assert(PWR_RET_SUCCESS == rc);
   // printf("Initial Frequency %lu\n", init_freq);
 
-  // If the core isn't already in userspace mode, set it.
-  gov = PWR_GOV_LINUX_USERSPACE;
-  //PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
-  //assert(PWR_RET_SUCCESS == rc);
+  // If the core isn't already in powersave mode, set it.
+  // gov = PWR_GOV_LINUX_POWERSAVE;
+  // PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
+  // assert(PWR_RET_SUCCESS == rc);
 
   // target_freq = 2800000;
   // printf("Setting target frequency to %lu\n", target_freq);
