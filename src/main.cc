@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
 
   
   PWR_ObjGetName(socket1, socket_name1, 100);
-  PWR_ObjGetName(socket1, socket_name2, 100);
+  PWR_ObjGetName(socket2, socket_name2, 100);
 
   PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
   assert(PWR_RET_SUCCESS == rc);
