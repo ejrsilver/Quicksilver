@@ -20,6 +20,7 @@
             </attributes>
             <children>
                 <child name="sock0"/>
+                <child name="sock1"/>
             </children>
         </obj>
         <obj name="node0.sock0" type="Socket">
@@ -62,7 +63,7 @@
         </obj>
         <obj name="node0.sock1" type="Socket">
             <devices>
-                <dev name="dev1" device="toilet-core" openString="pkg0" /> 
+                <dev name="dev1" device="toilet-core" openString="pkg1" /> 
             </devices>
             <attributes>
                 <attr name="ENERGY" op="SUM">
