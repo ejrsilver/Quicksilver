@@ -328,12 +328,12 @@ int run(int argc, char **argv) {
     cycleInit(bool(loadBalance));
     
     //START HINT for Parallel
-    PWR_AppHintStart(&region_id_parallel_socket1);
-    PWR_AppHintStart(&region_id_parallel_socket2);
+    //PWR_AppHintStart(&region_id_parallel_socket1);
+    //PWR_AppHintStart(&region_id_parallel_socket2);
     cycleTracking(mcco);
     //END HINT for Parallel
-    PWR_AppHintStop(&region_id_parallel_socket1);
-    PWR_AppHintStop(&region_id_parallel_socket2);
+    //PWR_AppHintStop(&region_id_parallel_socket1);
+    //PWR_AppHintStop(&region_id_parallel_socket2);
 
     cycleFinalize();
 
@@ -389,7 +389,9 @@ void cycleInit(bool loadBalance) {
 
   MC_SourceNow(mcco);
 
+  //THERE IS A DROP IN FREQUENCY HERE
   PopulationControl(mcco, loadBalance); // controls particle population
+  //END OF DROP
 
   RouletteLowWeightParticles(
       mcco); // Delete particles with low statistical weight
@@ -496,6 +498,8 @@ void cycleTracking(MonteCarlo *monteCarlo) {
 #endif
             for (int particle_index = 0; particle_index < numParticles;
                  particle_index++) {
+              
+
               CycleTrackingGuts(monteCarlo, particle_index, processingVault,
                                 processedVault);
             }
@@ -510,9 +514,15 @@ void cycleTracking(MonteCarlo *monteCarlo) {
 #include "mc_omp_parallel_for_schedule_static.hh"
             for (int particle_index = 0; particle_index < numParticles;
                  particle_index++) {
+              
+            //START HINT for Parallel
+            PWR_AppHintStart(&region_id_parallel_socket1);
+            PWR_AppHintStart(&region_id_parallel_socket2);
               CycleTrackingGuts(monteCarlo, particle_index, processingVault,
                                 processedVault);
             }
+            PWR_AppHintStop(&region_id_parallel_socket1);
+            PWR_AppHintStop(&region_id_parallel_socket2);
             break;
           default:
             qs_assert(false);
