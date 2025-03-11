@@ -93,6 +93,7 @@ PWR_ObjType coreType;
 
 //To create hint for socket
 uint64_t region_id_parallel;
+uint64_t region_id_serial;
 
 int main(int argc, char **argv) {
 
@@ -115,22 +116,22 @@ int main(int argc, char **argv) {
   // Assert that we're reading from a socket, so that we know it has energy.
   // Leaving in frequency stuff even though right now it'll all be zeros.
   // Gonna try to add it in, but more doc reading necessary.
-  PWR_ObjGetType(socket, &socketType);
-  assert(socketType == PWR_OBJ_SOCKET);
+  // PWR_ObjGetType(socket, &socketType);
+  // assert(socketType == PWR_OBJ_SOCKET);
 
-  PWR_ObjGetName(socket, socket_name, 100);
+  // PWR_ObjGetName(socket, socket_name, 100);
 
-  PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
-  assert(PWR_RET_SUCCESS == rc);
+  // PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
+  // assert(PWR_RET_SUCCESS == rc);
 
   
-  rc = PWR_ObjGetChildren(socket, &cores);
-  assert(rc >= PWR_RET_SUCCESS);
+  // rc = PWR_ObjGetChildren(socket, &cores);
+  // assert(rc >= PWR_RET_SUCCESS);
 
   uint64_t max_freq, min_freq, init_freq, target_freq, current_freq = 0;
 
-  PWR_GrpGetObjByIndx(cores, 0, &core);
-  PWR_ObjGetName(core, name, 100);
+  //PWR_GrpGetObjByIndx(cores, 2, &core);
+  //PWR_ObjGetName(core, name, 100);
 
   // Assert that we're reading a core, so we know it has frequency.
   // PWR_ObjGetType(core, &coreType);
@@ -142,14 +143,15 @@ int main(int argc, char **argv) {
   // printf("Initial Frequency %lu\n", init_freq);
 
   // If the core isn't already in userspace mode, set it.
-  gov = PWR_GOV_LINUX_USERSPACE;
+  //gov = PWR_GOV_LINUX_USERSPACE;
   //PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
   //assert(PWR_RET_SUCCESS == rc);
 
-  // target_freq = 2800000;
-  // printf("Setting target frequency to %lu\n", target_freq);
-  // PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
-  // assert(PWR_RET_SUCCESS == rc);
+  //target_freq = 2300000;
+  //printf("Setting %s \n", name);
+  //printf("Setting target frequency to %lu\n", target_freq);
+  //PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
+  //assert(PWR_RET_SUCCESS == rc);
 
   // sleep(1);
   // PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
@@ -167,9 +169,10 @@ int main(int argc, char **argv) {
   // printf("Current Frequency %lu\n", current_freq);
 
 
- //CREATE HINT for socket
- PWR_AppHintCreate(socket, socket_name, &region_id_parallel, PWR_REGION_PARALLEL);
- printf("region id: %ld\n", region_id_parallel);
+  //CREATE HINT for socket
+  PWR_AppHintCreate(socket, socket_name, &region_id_parallel, PWR_REGION_PARALLEL);
+  PWR_AppHintCreate(socket, socket_name, &region_id_serial, PWR_REGION_SERIAL);
+  //printf("region id: %ld\n", region_id_parallel);
 
  //START HINT for socket
   //PWR_AppHintStart(&region_id_socket);
@@ -294,28 +297,30 @@ int main(int argc, char **argv) {
 }
 
 int run(int argc, char **argv) {
+  auto start = std::chrono::high_resolution_clock::now();
   mpiInit(&argc, &argv);
 
   Parameters params = getParameters(argc, argv);
   printParameters(params, cout);
 
   // mcco stores just about everything.
-  mcco = initMC(params);
+  PWR_AppHintStart(&region_id_serial);
+  mcco = initMC(params, true);
 
   int loadBalance = params.simulationParams.loadBalance;
 
   MC_FASTTIMER_START(MC_Fast_Timer::main); // this can be done once mcco exist.
 
   const int nSteps = params.simulationParams.nSteps;
-
+  PWR_AppHintStart(&region_id_parallel);
   for (int ii = 0; ii < nSteps; ++ii) {
+
     cycleInit(bool(loadBalance));
     
-    //START HINT for Parallel
-    PWR_AppHintStart(&region_id_parallel);
+    // PWR_AppHintStop(&region_id_serial);
     cycleTracking(mcco);
-    //END HINT for Parallel
-    PWR_AppHintStop(&region_id_parallel);
+    // PWR_AppHintStop(&region_id_parallel);
+    // PWR_AppHintStart(&region_id_serial);
 
     cycleFinalize();
 

@@ -4,6 +4,6 @@
 class Parameters;
 class MonteCarlo;
 
-MonteCarlo* initMC(const Parameters& params);
+MonteCarlo* initMC(const Parameters& params, bool undo);
 
 #endif

@@ -36,7 +36,7 @@ namespace
 {
    void initGPUInfo(MonteCarlo* monteCarlo);
    void initNuclearData(MonteCarlo* monteCarlo, const Parameters& params);
-   void initMesh(MonteCarlo* monteCarlo, const Parameters& params);
+   void initMesh(MonteCarlo* monteCarlo, const Parameters& params, bool undo);
    void initTallies(MonteCarlo* monteCarlo, const Parameters& params);
    void initTimeInfo(MonteCarlo* monteCarlo, const Parameters& params);
    void initializeCentersRandomly(int nCenters,
@@ -50,7 +50,7 @@ namespace
 
 }
 
-MonteCarlo* initMC(const Parameters& params)
+MonteCarlo* initMC(const Parameters& params, bool undo)
 {
    MonteCarlo* monteCarlo;
    #ifdef HAVE_UVM
@@ -63,7 +63,24 @@ MonteCarlo* initMC(const Parameters& params)
    initGPUInfo(monteCarlo);
    initTimeInfo(monteCarlo, params);
    initNuclearData(monteCarlo, params);
-   initMesh(monteCarlo, params);
+   if (undo) {
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, true);
+    initMesh(monteCarlo, params, false);
+   }
+
    initTallies(monteCarlo, params);
 
    MC_Base_Particle::Update_Counts();
@@ -237,7 +254,7 @@ namespace
 
 namespace
 {
-   void initMesh(MonteCarlo* monteCarlo, const Parameters& params)
+   void initMesh(MonteCarlo* monteCarlo, const Parameters& params, bool undo)
    {
       int nx = params.simulationParams.nx;
       int ny = params.simulationParams.ny;
@@ -302,7 +319,9 @@ namespace
       
       delete comm;
       
-      monteCarlo->domain.reserve(myDomainGid.size(),VAR_MEM);
+      if (monteCarlo->domain.capacity() == 0) {
+        monteCarlo->domain.reserve(myDomainGid.size(),VAR_MEM);
+      }
       monteCarlo->domain.Open();
       for (unsigned ii=0; ii<myDomainGid.size(); ++ii)
       {
@@ -317,6 +336,13 @@ namespace
          consistencyCheck(myRank, monteCarlo->domain);
       
       if (myRank == 0) { cout << "Finished initMesh" <<endl; }
+
+      if (undo) {
+        cout << "Undoing..." << endl;
+        monteCarlo->domain.Open();
+        monteCarlo->domain.clear();
+        monteCarlo->domain.Close();
+     }
    }
 }
 
