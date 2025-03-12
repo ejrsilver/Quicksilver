@@ -159,15 +159,15 @@ int main(int argc, char **argv) {
   // PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
   // assert(PWR_RET_SUCCESS == rc);
 
-  // target_freq = 2800000;
-  // printf("Setting target frequency to %lu\n", target_freq);
-  // PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
-  // assert(PWR_RET_SUCCESS == rc);
+ // target_freq = 1200000;
+ // printf("Setting target frequency to %lu\n", target_freq);
+ // PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
+ // assert(PWR_RET_SUCCESS == rc);
 
-  // sleep(1);
-  // PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
-  // assert(PWR_RET_SUCCESS == rc);
-  // printf("Current Frequency %lu\n", current_freq);
+ // sleep(1);
+ // PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
+ // assert(PWR_RET_SUCCESS == rc);
+  //printf("Current Frequency %lu\n", current_freq);
 
   // target_freq = 1800000;
   // printf("Setting target frequency to %lu\n", target_freq);
@@ -328,12 +328,12 @@ int run(int argc, char **argv) {
     cycleInit(bool(loadBalance));
     
     //START HINT for Parallel
-   // PWR_AppHintStart(&region_id_parallel_socket1);
-   // PWR_AppHintStart(&region_id_parallel_socket2);
+    PWR_AppHintStart(&region_id_parallel_socket1);
+    //PWR_AppHintStart(&region_id_parallel_socket2);
     cycleTracking(mcco);
     //END HINT for Parallel
-   // PWR_AppHintStop(&region_id_parallel_socket1);
-   // PWR_AppHintStop(&region_id_parallel_socket2);
+    PWR_AppHintStop(&region_id_parallel_socket1);
+    //PWR_AppHintStop(&region_id_parallel_socket2);
 
     cycleFinalize();
 
