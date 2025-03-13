@@ -166,7 +166,10 @@ int main(int argc, char **argv)
   PWR_AppHintCreate(socket1, socket_name1, &region_id_parallel_socket1, PWR_REGION_PARALLEL);
   printf("region id socket1: %ld\n", region_id_parallel_socket1);
 
-  run(argc, argv);
+  PWR_AppHintStart(&region_id_parallel_socket1);
+  PWR_AppHintStop(&region_id_parallel_socket1);
+
+  // run(argc, argv);
   PWR_AppHintDestroy(&region_id_parallel_socket1);
 
   // set monitor thread to stop.
@@ -195,10 +198,10 @@ int run(int argc, char **argv)
     cycleInit(bool(loadBalance));
 
     // START HINT for Parallel
-    PWR_AppHintStart(&region_id_parallel_socket1);
+    // PWR_AppHintStart(&region_id_parallel_socket1);
     cycleTracking(mcco);
     // END HINT for Parallel
-    PWR_AppHintStop(&region_id_parallel_socket1);
+    // PWR_AppHintStop(&region_id_parallel_socket1);
 
     cycleFinalize();
 
