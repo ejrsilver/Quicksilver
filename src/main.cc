@@ -167,7 +167,28 @@ int main(int argc, char **argv)
   printf("region id socket1: %ld\n", region_id_parallel_socket1);
 
   PWR_AppHintStart(&region_id_parallel_socket1);
+  
+  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("[MAIN] Core 0 Frequency: %lu\n", init_freq);
+
+  PWR_GrpGetObjByIndx(cores1, 31, &core);
+  PWR_ObjGetName(core, name, 100);
+  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("[MAIN] Core 31 Frequency: %lu\n", init_freq);
+
   PWR_AppHintStop(&region_id_parallel_socket1);
+
+  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("[MAIN] Core 0 Frequency: %lu\n", init_freq);
+
+  PWR_GrpGetObjByIndx(cores1, 31, &core);
+  PWR_ObjGetName(core, name, 100);
+  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
+  assert(PWR_RET_SUCCESS == rc);
+  printf("[MAIN] Core 31 Frequency: %lu\n", init_freq);
 
   // run(argc, argv);
   PWR_AppHintDestroy(&region_id_parallel_socket1);
