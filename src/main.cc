@@ -123,9 +123,6 @@ int main(int argc, char **argv)
 
   PWR_ObjGetName(socket1, socket_name1, 100);
 
-  PWR_ObjAttrGetValue(node, PWR_ATTR_ENERGY, &energy, &ts);
-  assert(PWR_RET_SUCCESS == rc);
-
   rc = PWR_ObjGetChildren(socket1, &cores1);
   assert(rc >= PWR_RET_SUCCESS);
 
@@ -134,48 +131,46 @@ int main(int argc, char **argv)
   PWR_GrpGetObjByIndx(cores1, 0, &core);
   PWR_ObjGetName(core, name, 100);
 
-  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
-  assert(PWR_RET_SUCCESS == rc);
-  printf("Initial Frequency %lu\n", init_freq);
+  // PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &init_freq, &ts);
+  // assert(PWR_RET_SUCCESS == rc);
+  // printf("Initial Frequency %lu\n", init_freq);
 
-  // If the core isn't already in userspace mode, set it.
-  gov = PWR_GOV_LINUX_USERSPACE;
-  PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
-  assert(PWR_RET_SUCCESS == rc);
+  // // If the core isn't already in userspace mode, set it.
+  // gov = PWR_GOV_LINUX_USERSPACE;
+  // PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
+  // assert(PWR_RET_SUCCESS == rc);
 
-  target_freq = 2000000;
-  printf("Setting target frequency to %lu\n", target_freq);
-  PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
-  assert(PWR_RET_SUCCESS == rc);
+  // target_freq = 2000000;
+  // printf("Setting target frequency to %lu\n", target_freq);
+  // PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
+  // assert(PWR_RET_SUCCESS == rc);
 
-  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
-  assert(PWR_RET_SUCCESS == rc);
-  printf("Current Frequency %lu\n", current_freq);
+  // PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
+  // assert(PWR_RET_SUCCESS == rc);
+  // printf("Current Frequency %lu\n", current_freq);
 
-  target_freq = 1200000;
-  printf("Setting target frequency to %lu\n", target_freq);
-  PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
-  assert(PWR_RET_SUCCESS == rc);
+  // target_freq = 1200000;
+  // printf("Setting target frequency to %lu\n", target_freq);
+  // PWR_ObjAttrSetValue(core, PWR_ATTR_FREQ, &target_freq);
+  // assert(PWR_RET_SUCCESS == rc);
 
-  PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
-  assert(PWR_RET_SUCCESS == rc);
-  printf("Current Frequency %lu\n", current_freq);
+  // PWR_ObjAttrGetValue(core, PWR_ATTR_FREQ, &current_freq, &ts);
+  // assert(PWR_RET_SUCCESS == rc);
+  // printf("Current Frequency %lu\n", current_freq);
 
-  gov = PWR_GOV_LINUX_POWERSAVE;
-  PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
-  assert(PWR_RET_SUCCESS == rc);
+  // gov = PWR_GOV_LINUX_POWERSAVE;
+  // PWR_ObjAttrSetValue(core, PWR_ATTR_GOV, &gov);
+  // assert(PWR_RET_SUCCESS == rc);
 
   // CREATE HINT for socket
-  // PWR_AppHintCreate(socket1, socket_name1, &region_id_parallel_socket1, PWR_REGION_PARALLEL);
-  // printf("region id socket1: %ld\n", region_id_parallel_socket1);
+  PWR_AppHintCreate(socket1, socket_name1, &region_id_parallel_socket1, PWR_REGION_PARALLEL);
+  printf("region id socket1: %ld\n", region_id_parallel_socket1);
 
   run(argc, argv);
-  //  PWR_AppHintDestroy(&region_id_parallel_socket1);
+  PWR_AppHintDestroy(&region_id_parallel_socket1);
 
   // set monitor thread to stop.
   running = false;
-  // t1.join();
-
   return 1;
 }
 
@@ -200,10 +195,10 @@ int run(int argc, char **argv)
     cycleInit(bool(loadBalance));
 
     // START HINT for Parallel
-    // PWR_AppHintStart(&region_id_parallel_socket1);
+    PWR_AppHintStart(&region_id_parallel_socket1);
     cycleTracking(mcco);
     // END HINT for Parallel
-    // PWR_AppHintStop(&region_id_parallel_socket1);
+    PWR_AppHintStop(&region_id_parallel_socket1);
 
     cycleFinalize();
 
