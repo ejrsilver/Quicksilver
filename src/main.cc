@@ -84,17 +84,17 @@ PWR_Status status;
 PWR_Grp sockets;
 char name[100];
 uint64_t energy;
-PWR_Obj socket1;
+PWR_Obj socket;
 PWR_ObjType socketType;
-char socket_name1[100];
-char socket_name2[100];
+char socket_name[100];
 PWR_Grp cores1;
 PWR_AttrGov gov;
 PWR_Obj core;
 PWR_ObjType coreType;
 
 // To create hint for sockets on CAC
-uint64_t region_id_parallel_socket1;
+uint64_t region_id_serial;
+uint64_t region_id_parallel;
 
 int main(int argc, char **argv)
 {
@@ -113,23 +113,23 @@ int main(int argc, char **argv)
   assert(rc >= PWR_RET_SUCCESS);
 
   // Get first socket.
-  PWR_GrpGetObjByIndx(sockets, 0, &socket1);
+  PWR_GrpGetObjByIndx(sockets, 0, &socket);
 
   // Assert that we're reading from a socket, so that we know it has energy.
   // Leaving in frequency stuff even though right now it'll all be zeros.
   // Gonna try to add it in, but more doc reading necessary.
-  PWR_ObjGetType(socket1, &socketType);
-  assert(socketType == PWR_OBJ_SOCKET);
+  // PWR_ObjGetType(socket1, &socketType);
+  // assert(socketType == PWR_OBJ_SOCKET);
 
-  PWR_ObjGetName(socket1, socket_name1, 100);
+  PWR_ObjGetName(socket, socket_name, 100);
 
-  rc = PWR_ObjGetChildren(socket1, &cores1);
-  assert(rc >= PWR_RET_SUCCESS);
+  // rc = PWR_ObjGetChildren(socket1, &cores1);
+  // assert(rc >= PWR_RET_SUCCESS);
 
-  uint64_t max_freq, min_freq, init_freq, target_freq, current_freq = 0;
+  // uint64_t max_freq, min_freq, init_freq, target_freq, current_freq = 0;
 
-  PWR_GrpGetObjByIndx(cores1, 0, &core);
-  PWR_ObjGetName(core, name, 100);
+  // PWR_GrpGetObjByIndx(cores1, 0, &core);
+  // PWR_ObjGetName(core, name, 100);
 
   // ############ START This stuff is just to ensure pwrAPI works as expected ############
 
@@ -166,17 +166,14 @@ int main(int argc, char **argv)
 
   // ############ ENDOF This stuff is just to ensure pwrAPI works as expected ############
 
-  // Create, start, stop and destroy a hint for the main socket. Put start/stop where parallel region starts
-  PWR_AppHintCreate(socket1, socket_name1, &region_id_parallel_socket1, PWR_REGION_PARALLEL);
-  printf("region id socket1: %ld\n", region_id_parallel_socket1);
-  PWR_AppHintStart(&region_id_parallel_socket1);
-  PWR_AppHintStop(&region_id_parallel_socket1);
-  PWR_AppHintDestroy(&region_id_parallel_socket1);
+  PWR_AppHintCreate(socket, socket_name, &region_id_parallel, PWR_REGION_PARALLEL);
+  PWR_AppHintCreate(socket, socket_name, &region_id_serial, PWR_REGION_SERIAL);
 
   run(argc, argv);
+  PWR_AppHintDestroy(&region_id_parallel);
   // set monitor thread to stop.
   running = false;
-  return 1;
+  return 0;
 }
 
 int run(int argc, char **argv)
@@ -187,7 +184,9 @@ int run(int argc, char **argv)
   printParameters(params, cout);
 
   // mcco stores just about everything.
+  PWR_AppHintStart(&region_id_serial);
   mcco = initMC(params);
+  PWR_AppHintStop(&region_id_serial);
 
   int loadBalance = params.simulationParams.loadBalance;
 
@@ -197,13 +196,13 @@ int run(int argc, char **argv)
 
   for (int ii = 0; ii < nSteps; ++ii)
   {
+    PWR_AppHintStart(&region_id_serial);
     cycleInit(bool(loadBalance));
+    PWR_AppHintStop(&region_id_serial);
 
-    // START HINT for Parallel
-    // PWR_AppHintStart(&region_id_parallel_socket1);
+    PWR_AppHintStart(&region_id_parallel);
     cycleTracking(mcco);
-    // END HINT for Parallel
-    // PWR_AppHintStop(&region_id_parallel_socket1);
+    PWR_AppHintStop(&region_id_parallel);
 
     cycleFinalize();
 
