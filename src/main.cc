@@ -185,24 +185,19 @@ int run(int argc, char **argv)
 
   // mcco stores just about everything.
   PWR_AppHintStart(&region_id_serial);
+
   mcco = initMC(params);
-  PWR_AppHintStop(&region_id_serial);
 
   int loadBalance = params.simulationParams.loadBalance;
 
   MC_FASTTIMER_START(MC_Fast_Timer::main); // this can be done once mcco exist.
 
   const int nSteps = params.simulationParams.nSteps;
-
   for (int ii = 0; ii < nSteps; ++ii)
   {
-    PWR_AppHintStart(&region_id_serial);
     cycleInit(bool(loadBalance));
-    PWR_AppHintStop(&region_id_serial);
 
-    PWR_AppHintStart(&region_id_parallel);
     cycleTracking(mcco);
-    PWR_AppHintStop(&region_id_parallel);
 
     cycleFinalize();
 
@@ -391,6 +386,8 @@ void cycleTracking(MonteCarlo *monteCarlo)
           break;
 
           case cpu:
+            // Scale up to max on the 4 cores here and unpin thread
+            PWR_AppHintStart(&region_id_parallel);
 #include "mc_omp_parallel_for_schedule_static.hh"
             for (int particle_index = 0; particle_index < numParticles;
                  particle_index++)
@@ -398,6 +395,8 @@ void cycleTracking(MonteCarlo *monteCarlo)
               CycleTrackingGuts(monteCarlo, particle_index, processingVault,
                                 processedVault);
             }
+            // Reduce to lowest frequency RIGHT AWAY (this is where we should beat ONDEMAND) except for core 1
+            PWR_AppHintStart(&region_id_serial);
             break;
           default:
             qs_assert(false);
